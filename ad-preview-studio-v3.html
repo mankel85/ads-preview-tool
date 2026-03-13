@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ad Preview Studio</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --text: #111827;
+      --border: #e5e7eb;
+      --soft: #f3f4f6;
+      --primary: #111827;
+      --link: #1a0dab;
+      --green: #138a36;
+      --danger: #b42318;
+      --danger-bg: #fee4e2;
+      --ok: #067647;
+      --ok-bg: #d1fadf;
+      --shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .hero, .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .eyebrow {
+      display: inline-block;
+      background: var(--soft);
+      color: #475467;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 8px 12px;
+    }
+    h1 {
+      font-size: clamp(30px, 4vw, 44px);
+      margin: 16px 0 10px;
+      line-height: 1.08;
+    }
+    .sub {
+      color: var(--muted);
+      max-width: 900px;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    button, .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    button.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .tabs button.active, .mini-tabs button.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(420px, 1.04fr) minmax(360px, .96fr);
+      gap: 24px;
+      align-items: start;
+    }
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+    .card {
+      padding: 18px;
+    }
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+    .hint {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .field {
+      margin-bottom: 14px;
+    }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .field-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 7px;
+    }
+    label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    input[type="text"], input[type="url"], textarea, select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px 14px;
+      font: inherit;
+      color: var(--text);
+      background: white;
+      outline: none;
+    }
+    textarea { resize: vertical; min-height: 88px; }
+    .counter {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--ok-bg);
+      color: var(--ok);
+      white-space: nowrap;
+    }
+    .counter.over {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+    .list-item {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .list-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .list-head span {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #667085;
+      font-weight: 700;
+    }
+    .small-btn {
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+    .asset-preview {
+      border: 1px solid var(--border);
+      background: var(--soft);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .asset-preview img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+    .preview-col {
+      position: sticky;
+      top: 18px;
+    }
+    .mini-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .diag-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      background: var(--soft);
+      border-radius: 18px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .diag-row strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+    .diag-row small { color: var(--muted); }
+
+    .preview-shell {
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .preview-topbar {
+      border-bottom: 1px solid #eef2f6;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 14px 18px;
+    }
+    .search-preview { padding: 20px; }
+    .search-tabs {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eef2f6;
+    }
+    .search-tabs b { color: var(--text); }
+    .domain-line {
+      color: #3f3f46;
+      font-size: 13px;
+    }
+    .google-title {
+      color: var(--link);
+      font-size: 26px;
+      line-height: 1.22;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .google-desc {
+      color: #3f3f46;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .pill {
+      background: var(--soft);
+      color: #475467;
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+    }
+    .sitelinks {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .sitelink {
+      background: var(--soft);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .sitelink strong {
+      color: var(--link);
+      font-size: 14px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .sitelink small { color: var(--muted); }
+
+    .display-grid {
+      display: grid;
+      gap: 18px;
+    }
+    .display-native, .display-square, .display-banner, .meta-card, .linkedin-card {
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .display-native .body, .display-square .body, .display-banner .body, .meta-card .body, .linkedin-card .body { padding: 16px; }
+    .preview-img { width: 100%; display: block; object-fit: cover; background: #e5e7eb; }
+    .native-head { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+    .logo-sm { width: 42px; height: 42px; border-radius: 12px; object-fit: cover; background: #e5e7eb; }
+    .display-native .preview-img { aspect-ratio: 1.91/1; border-radius: 20px; }
+    .display-square .preview-img { aspect-ratio: 1/1; }
+    .display-banner .layout {
+      display: grid;
+      grid-template-columns: 1.91fr 1fr;
+    }
+    .display-banner .preview-img { height: 100%; min-height: 240px; }
+    .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+    .headline-lg { font-size: 28px; font-weight: 700; line-height: 1.15; margin-top: 8px; }
+    .headline-md { font-size: 20px; font-weight: 700; line-height: 1.2; margin-top: 8px; }
+    .desc { color: #475467; font-size: 14px; line-height: 1.6; margin-top: 8px; }
+
+    .meta-header, .linkedin-header {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: #e5e7eb; }
+    .insta-ring {
+      width: 44px; height: 44px; border-radius: 50%; padding: 2px;
+      background: linear-gradient(135deg, #d946ef, #f97316, #fde047);
+      flex: none;
+    }
+    .insta-ring img { width: 100%; height: 100%; border-radius: 50%; padding: 2px; background: #fff; object-fit: cover; }
+    .meta-copy { padding: 0 16px 14px; font-size: 15px; line-height: 1.65; color: #374151; }
+    .meta-footer, .linkedin-footer {
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+      background: var(--soft); border-top: 1px solid #eef2f6; padding: 16px;
+    }
+    .meta-body-img { aspect-ratio: 1.2/1; }
+    .instagram-img { aspect-ratio: 1/1; }
+    .story-card {
+      width: 320px; margin: 0 auto; border-radius: 34px; overflow: hidden; border: 1px solid #1f2937; box-shadow: 0 16px 45px rgba(0,0,0,.25); background: #000;
+    }
+    .story-wrap { position: relative; aspect-ratio: 9/16; }
+    .story-wrap .preview-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .story-top, .story-bottom {
+      position: absolute; left: 0; right: 0; z-index: 2; color: #fff;
+    }
+    .story-top { top: 0; display: flex; justify-content: space-between; padding: 16px; }
+    .story-bottom {
+      bottom: 0; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,.8), rgba(0,0,0,0));
+    }
+    .story-bottom .headline-md, .story-bottom .desc, .story-bottom .kicker { color: #fff; }
+    .story-bottom .desc { opacity: .92; }
+
+    .linkedin-img { aspect-ratio: 1.91/1; }
+
+    .muted { color: var(--muted); }
+    .notes p { color: var(--muted); line-height: 1.7; margin: 0 0 12px; }
+    .hide { display: none !important; }
+
+    @media (max-width: 1120px) {
+      .grid { grid-template-columns: 1fr; }
+      .preview-col { position: static; }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 14px; }
+      .hero { padding: 18px; }
+      .card { padding: 14px; }
+      .field-row, .display-banner .layout, .sitelinks { grid-template-columns: 1fr; }
+      .google-title { font-size: 22px; }
+      .headline-lg { font-size: 22px; }
+    }
+  
+.mini-tabs { overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.mini-tabs button { white-space: nowrap; }
+.helper-note {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.warning-note {
+  margin-top: 10px;
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+  border-radius: 16px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.count-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 10px;
+}
+.count-pill {
+  font-size: 12px;
+  color: #475467;
+  background: var(--soft);
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-weight: 600;
+}
+.google-shell {
+  background: #fff;
+  border: 1px solid #dfe1e5;
+  border-radius: 26px;
+  box-shadow: 0 4px 18px rgba(32, 33, 36, .10);
+  overflow: hidden;
+}
+.google-chrome {
+  border-bottom: 1px solid #eceff3;
+  padding: 14px 18px 10px;
+  background: #fff;
+}
+.google-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.google-g {
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -.02em;
+  color: #4285f4;
+  min-width: 24px;
+}
+.google-searchbar {
+  flex: 1;
+  min-height: 48px;
+  border: 1px solid #dfe1e5;
+  border-radius: 24px;
+  box-shadow: 0 1px 6px rgba(32,33,36,.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  color: #202124;
+  font-size: 15px;
+  background: #fff;
+}
+.google-icons {
+  color: #9aa0a6;
+  font-size: 14px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.google-nav {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin-top: 12px;
+  color: #5f6368;
+  font-size: 13px;
+}
+.google-nav b {
+  color: #1a73e8;
+  position: relative;
+  font-weight: 600;
+}
+.google-nav b::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 3px;
+  border-radius: 999px;
+  background: #1a73e8;
+}
+.google-results {
+  padding: 22px 24px 26px;
+  background: #fff;
+}
+.google-meta {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.google-favicon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e8f0fe;
+  color: #1a73e8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.google-meta-lines { min-width: 0; }
+.google-brandline {
+  color: #202124;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.google-brandline small {
+  color: #5f6368;
+  font-size: 12px;
+}
+.google-url {
+  color: #188038;
+  font-size: 12px;
+  margin-top: 2px;
+}
+.google-title {
+  color: #1a0dab;
+  font-size: 24px;
+  line-height: 1.25;
+  margin: 8px 0 6px;
+  font-weight: 400;
+}
+.google-desc {
+  color: #4d5156;
+  font-size: 14px;
+  line-height: 1.58;
+  max-width: 720px;
+}
+.google-assets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.google-asset-pill {
+  border: 1px solid #dadce0;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #3c4043;
+  background: #fff;
+}
+.google-sitelinks {
+  display: grid;
+  gap: 8px 20px;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  margin-top: 14px;
+  max-width: 680px;
+}
+.google-sitelink {
+  padding: 2px 0;
+}
+.google-sitelink strong {
+  color: #1a0dab;
+  font-size: 14px;
+}
+.google-sitelink small {
+  display: block;
+  color: #5f6368;
+  margin-top: 3px;
+  font-size: 12px;
+}
+.google-shell.mobile .google-chrome {
+  padding: 12px 14px 10px;
+}
+.google-shell.mobile .google-searchbar {
+  min-height: 44px;
+  font-size: 14px;
+}
+.google-shell.mobile .google-nav {
+  gap: 14px;
+  font-size: 12px;
+  overflow-x: auto;
+}
+.google-shell.mobile .google-results {
+  padding: 18px 16px 20px;
+}
+.google-shell.mobile .google-title {
+  font-size: 20px;
+}
+.google-shell.mobile .google-sitelinks {
+  grid-template-columns: 1fr;
+  max-width: none;
+}
+.asset-grid {
+  display: grid;
+  gap: 12px;
+}
+.card-block {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 14px;
+  background: #fff;
+}
+.card-block h4 {
+  margin: 0;
+  font-size: 14px;
+}
+.card-block .card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.stack-tight { display: grid; gap: 10px; }
+.card-inline-preview {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+.card-inline-preview img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  display: block;
+}
+.carousel-track {
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+  padding-bottom: 4px;
+}
+.carousel-card {
+  width: 220px;
+  min-width: 220px;
+  border: 1px solid #d8dee7;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(15,23,42,.06);
+}
+.carousel-card img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  display: block;
+}
+.carousel-card .body {
+  padding: 12px;
+}
+.carousel-card .title {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.35;
+  color: #111827;
+}
+.carousel-card .desc {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.45;
+}
+.carousel-card .url {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6b7280;
+}
+.carousel-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.carousel-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+.carousel-dots span.active { background: #111827; }
+.meta-carousel-shell,
+.linkedin-carousel-shell,
+.youtube-shell {
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.meta-carousel-shell .header,
+.linkedin-carousel-shell .header,
+.youtube-shell .header {
+  padding: 16px;
+}
+.meta-carousel-shell .copy,
+.linkedin-carousel-shell .copy,
+.youtube-shell .copy {
+  padding: 0 16px 14px;
+  color: #374151;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.meta-stage,
+.linkedin-stage,
+.youtube-stage {
+  padding: 0 16px 18px;
+}
+.safe-preview {
+  width: 320px;
+  max-width: 100%;
+  border-radius: 34px;
+  overflow: hidden;
+  border: 1px solid #d1d5db;
+  background: #000;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, .30);
+  margin-inline: auto;
+}
+.safe-canvas {
+  position: relative;
+  aspect-ratio: 9/16;
+  color: #fff;
+}
+.safe-canvas img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.safe-top-fill,
+.safe-bottom-fill {
+  position: absolute;
+  inset-inline: 0;
+  pointer-events: none;
+  background: rgba(17,24,39,.35);
+}
+.safe-top-fill { top: 0; height: 14%; }
+.safe-bottom-fill { bottom: 0; height: 20%; }
+.safe-zone-box {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 14%;
+  bottom: 20%;
+  border: 2px dashed rgba(255,255,255,.72);
+  border-radius: 20px;
+  pointer-events: none;
+}
+.safe-zone-label {
+  position: absolute;
+  right: 12px;
+  top: 16%;
+  background: rgba(255,255,255,.88);
+  color: #111827;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 7px 10px;
+}
+.story-top-ui,
+.story-bottom-ui {
+  position: absolute;
+  inset-inline: 0;
+  z-index: 2;
+}
+.story-top-ui {
+  top: 0;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.story-bottom-ui {
+  bottom: 0;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.68) 62%, rgba(0,0,0,.82) 100%);
+}
+.safe-caption {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 26%;
+  z-index: 2;
+  color: #fff;
+  text-align: left;
+}
+.safe-caption .kicker {
+  color: rgba(255,255,255,.84);
+}
+.safe-caption .headline-md,
+.safe-caption .desc { color: #fff; }
+.reels-actions {
+  position: absolute;
+  right: 12px;
+  bottom: 24%;
+  z-index: 2;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  color: #fff;
+  font-size: 12px;
+}
+.reels-actions span {
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 999px;
+  padding: 10px 12px;
+  min-width: 44px;
+  text-align: center;
+}
+.li-card-wrap {
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+}
+.li-carousel-card {
+  width: 210px;
+  min-width: 210px;
+  border: 1px solid #d8dee7;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+.li-carousel-card img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  display: block;
+}
+.li-carousel-card .body {
+  padding: 12px;
+}
+.li-carousel-card .title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.4;
+}
+.li-carousel-card .desc {
+  font-size: 12px;
+  color: #667085;
+  margin-top: 6px;
+  line-height: 1.45;
+}
+.li-carousel-card .cta {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #cfd4dc;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0a66c2;
+  background: #fff;
+}
+.yt-layout {
+  display: grid;
+  grid-template-columns: 1.3fr .9fr;
+  gap: 14px;
+  align-items: start;
+}
+.yt-thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid #dbe0e7;
+  background: #000;
+}
+.yt-thumb img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+}
+.yt-play {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  width: 56px;
+  height: 40px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.yt-duration {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(0,0,0,.82);
+  color: #fff;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.yt-meta {
+  padding-top: 2px;
+}
+.yt-meta .title {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #0f172a;
+}
+.yt-meta .desc {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.55;
+}
+.yt-channel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  color: #475569;
+  font-size: 13px;
+}
+.yt-channel img {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+.yt-watch-card {
+  border: 1px solid #dbe0e7;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+}
+.yt-watch-card .meta {
+  padding: 14px;
+}
+.yt-short-shell {
+  width: 320px;
+  max-width: 100%;
+  margin-inline: auto;
+  border: 1px solid #d1d5db;
+  border-radius: 32px;
+  background: #000;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, .28);
+}
+.yt-short-stage {
+  position: relative;
+  aspect-ratio: 9/16;
+}
+.yt-short-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.yt-short-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(0,0,0,.32), rgba(0,0,0,0) 28%, rgba(0,0,0,.64) 100%);
+  color: #fff;
+}
+.yt-short-actions {
+  position: absolute;
+  right: 12px;
+  bottom: 100px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+.yt-short-actions span {
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  padding: 10px 12px;
+  min-width: 44px;
+  text-align: center;
+}
+.preview-note {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+@media (max-width: 900px) {
+  .yt-layout { grid-template-columns: 1fr; }
+  .google-sitelinks { grid-template-columns: 1fr; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="eyebrow">Ad Preview Studio</div>
+      <h1>Mock up paid ads across Google, Meta, Instagram and LinkedIn</h1>
+      <p class="sub">A testable prototype inspired by the NordicClick Google Ads preview pattern, expanded to include Google Responsive Display plus Meta, Instagram and LinkedIn previews. It is designed for client reviews and creative QA, not as a pixel-perfect native platform clone.</p>
+      <div class="toolbar">
+        <button id="loadExample">Load example data</button>
+        <button id="shuffle">Shuffle visible combo</button>
+        <button id="copyLink">Copy share link</button>
+        <button id="downloadJson">Export JSON</button>
+        <button class="primary" id="resetAll">Reset all</button>
+      </div>
+      <div class="tabs" id="channelTabs"></div>
+    </div>
+
+    <div class="grid">
+      <div class="stack">
+        <div class="card" id="editorCard"></div>
+      </div>
+      <div class="stack preview-col">
+        <div class="card">
+          <h3>Live preview</h3>
+          <p class="hint">Shareable previews update instantly as you type.</p>
+          <div id="previewSubtabs" class="mini-tabs"></div>
+          <div id="previewRoot"></div>
+        </div>
+        <div class="card">
+          <h3>Quick checks</h3>
+          <p class="hint">Use these counters as creative guardrails while reviewing drafts.</p>
+          <div id="diagnostics"></div>
+        </div>
+        <div class="card notes">
+          <h3>Notes</h3>
+          <p>Share links persist the current state into the browser URL, which makes it easy to send a preview to a teammate or client without wiring up a database.</p>
+          <p>The next useful upgrades would be saved projects, brand presets, PNG/PDF export, better asset cropping controls, and placement-specific validation logic.</p>
+          <p>You can upload images directly in this prototype or paste image URLs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <script>
+    const DOUBLE_WIDTH_RE = /[\u1100-\u115F\u2E80-\uA4CF\uAC00-\uD7A3\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE6F\uFF00-\uFF60\uFFE0-\uFFE6]/;
+    const LIMITS = {
+      googleSearch: { headline: 30, description: 90, path: 15, headlinesMin: 3, headlinesMax: 15, descriptionsMin: 2, descriptionsMax: 4 },
+      googleDisplay: { businessName: 25, shortHeadline: 30, longHeadline: 90, description: 90, shortHeadlinesMin: 1, shortHeadlinesMax: 5, descriptionsMin: 1, descriptionsMax: 5 },
+      meta: { primary: 125, headline: 40, description: 25, cardsMin: 2, cardsMax: 10 },
+      linkedin: { introRecommended: 150, headlineRecommended: 70, descriptionRecommended: 70, cardsMin: 2, cardsMax: 10 },
+      youtube: { headline: 100, description: 35 }
+    };
+
+    const PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80";
+    const PLACEHOLDER_SQUARE = "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80";
+    const PLACEHOLDER_LOGO = "https://dummyimage.com/200x200/111827/ffffff.png&text=Logo";
+
+    const DISPLAY_VARIANTS = [
+      ["desktopNative", "Desktop Native"],
+      ["desktopBanner", "Desktop Banner"],
+      ["desktopRectangle", "Desktop Rectangle"],
+      ["desktopSkyscraper", "Desktop Skyscraper"],
+      ["desktopGmail", "Desktop Gmail"],
+      ["mobileNative", "Mobile Native"],
+      ["mobileSquare", "Mobile Square"],
+      ["mobileBanner", "Mobile Banner"],
+      ["mobileApp", "Mobile App"],
+      ["mobileInterstitial", "Mobile Interstitial"]
+    ];
+
+    const META_VARIANTS = [
+      ["facebook", "Facebook Feed"],
+      ["instagram", "Instagram Feed"],
+      ["carousel", "Carousel"],
+      ["story", "Story"],
+      ["reels", "Reels"]
+    ];
+
+    const LINKEDIN_VARIANTS = [
+      ["single", "Single Image"],
+      ["carousel", "Carousel"]
+    ];
+
+    const YOUTUBE_VARIANTS = [
+      ["infeed", "In-feed"],
+      ["watchnext", "Watch Next"],
+      ["shorts", "Shorts"]
+    ];
+
+    function defaultMetaCard(i = 1) {
+      return {
+        image: PLACEHOLDER_SQUARE,
+        headline: `Card headline ${i}`,
+        description: `Optional card description ${i}`,
+        url: `https://www.example.com/card-${i}`
+      };
+    }
+
+    function defaultLinkedInCard(i = 1) {
+      return {
+        image: PLACEHOLDER_SQUARE,
+        headline: `Card headline ${i}`,
+        description: `Short supporting copy ${i}`,
+        url: `https://www.example.com/card-${i}`
+      };
+    }
+
+    const EXAMPLES = {
+      channel: "googleSearch",
+      searchDevice: "desktop",
+      displayVariant: "desktopNative",
+      seed: 0,
+      metaPlacement: "facebook",
+      linkedinLayout: "single",
+      youtubeFormat: "infeed",
+      googleSearch: {
+        query: "running shoes",
+        finalUrl: "https://www.example.com/running-shoes",
+        paths: ["running", "sale"],
+        headlines: [
+          "Shop Running Shoes Online",
+          "Free Shipping on Orders €50+",
+          "Men's, Women's & Kids Sizes",
+          "Top Brands at Great Prices",
+          "30-Day Returns Available"
+        ],
+        headlinePins: ["1", "2", "", "", ""],
+        descriptions: [
+          "Find lightweight road, trail and gym shoes from trusted brands. Order today with fast delivery.",
+          "Compare cushioning, stability and fit in one place. Easy returns if it's not the right pair.",
+          "New season models and everyday value picks for all skill levels.",
+          "Visit online or in-store for expert fitting and fresh arrivals."
+        ],
+        descriptionPins: ["1", "", "", ""],
+        callouts: ["Free shipping", "30-day returns", "Top brands", "In-store pickup"],
+        sitelinks: ["Men's Running Shoes", "Women's Running Shoes", "Trail Shoes", "Sale & Outlet"]
+      },
+      googleDisplay: {
+        finalUrl: "https://www.example.com/new-arrivals",
+        businessName: "Example Sports",
+        shortHeadlines: [
+          "New Season Running Gear",
+          "Train Smarter Every Day",
+          "Shop Shoes & Apparel",
+          "Fresh Arrivals Online",
+          "Move Better This Spring"
+        ],
+        longHeadline: "Shop lightweight running gear, shoes and apparel built for comfort and speed.",
+        descriptions: [
+          "Discover bestsellers and new arrivals with fast delivery and easy returns.",
+          "From daily runs to race day, find gear that fits your goals.",
+          "Browse premium brands and everyday essentials in one place."
+        ],
+        cta: "Shop now",
+        landscapeImage: PLACEHOLDER_IMAGE,
+        squareImage: PLACEHOLDER_SQUARE,
+        logoImage: PLACEHOLDER_LOGO
+      },
+      meta: {
+        brand: "Example Sports",
+        pageName: "Example Sports",
+        primaryText: "Meet your new everyday trainers. Lightweight cushioning, breathable upper and fast delivery across the Baltics.",
+        headline: "Your next run starts here",
+        description: "Free shipping over €50",
+        cta: "Shop Now",
+        finalUrl: "https://www.example.com/trainers",
+        image: PLACEHOLDER_SQUARE,
+        cards: [defaultMetaCard(1), defaultMetaCard(2), defaultMetaCard(3)]
+      },
+      linkedin: {
+        company: "Nobel Digital",
+        introText: "Build better paid media workflows with a preview studio your team can use before launch.",
+        headline: "Ad preview studio for modern teams",
+        description: "Mock up paid creative before it goes live.",
+        cta: "Learn More",
+        finalUrl: "https://www.example.com/b2b-preview-tool",
+        image: PLACEHOLDER_IMAGE,
+        logo: PLACEHOLDER_LOGO,
+        cards: [defaultLinkedInCard(1), defaultLinkedInCard(2), defaultLinkedInCard(3)]
+      },
+      youtube: {
+        advertiser: "Example Sports",
+        channelName: "Example Sports",
+        headline: "Run lighter with the right gear",
+        description1: "Discover shoes, apparel and essentials built for comfort.",
+        description2: "Watch now and shop the collection.",
+        cta: "Shop now",
+        finalUrl: "https://www.example.com/youtube-collection",
+        thumbnail: PLACEHOLDER_IMAGE,
+        logo: PLACEHOLDER_LOGO,
+        videoLength: "0:15"
+      }
+    };
+
+    const CHANNELS = [
+      ["googleSearch", "Google Search"],
+      ["googleDisplay", "Google Responsive Display"],
+      ["meta", "Meta / Instagram"],
+      ["linkedin", "LinkedIn"],
+      ["youtube", "YouTube"]
+    ];
+
+    let state = loadState();
+
+    function clone(obj) { return JSON.parse(JSON.stringify(obj)); }
+    function normalizePins(pins, items) {
+      const size = Array.isArray(items) ? items.length : 0;
+      const next = Array.isArray(pins) ? pins.slice(0, size) : [];
+      while (next.length < size) next.push('');
+      return next.map(v => String(v || ''));
+    }
+    function normalizeState(raw) {
+      const next = Object.assign(clone(EXAMPLES), raw || {});
+      next.googleSearch = Object.assign(clone(EXAMPLES.googleSearch), raw?.googleSearch || {});
+      next.googleSearch.headlinePins = normalizePins(next.googleSearch.headlinePins, next.googleSearch.headlines);
+      next.googleSearch.descriptionPins = normalizePins(next.googleSearch.descriptionPins, next.googleSearch.descriptions);
+      next.googleDisplay = Object.assign(clone(EXAMPLES.googleDisplay), raw?.googleDisplay || {});
+      next.meta = Object.assign(clone(EXAMPLES.meta), raw?.meta || {});
+      next.linkedin = Object.assign(clone(EXAMPLES.linkedin), raw?.linkedin || {});
+      next.youtube = Object.assign(clone(EXAMPLES.youtube), raw?.youtube || {});
+      next.meta.cards = Array.isArray(next.meta.cards) && next.meta.cards.length ? next.meta.cards : [defaultMetaCard(1), defaultMetaCard(2)];
+      next.linkedin.cards = Array.isArray(next.linkedin.cards) && next.linkedin.cards.length ? next.linkedin.cards : [defaultLinkedInCard(1), defaultLinkedInCard(2)];
+      return next;
+    }
+    function loadState() {
+      const params = new URLSearchParams(location.search);
+      const config = params.get("config");
+      if (!config) return normalizeState(EXAMPLES);
+      try {
+        return normalizeState(JSON.parse(decodeURIComponent(config)));
+      } catch {
+        return normalizeState(EXAMPLES);
+      }
+    }
+    function saveState() {
+      const params = new URLSearchParams(location.search);
+      params.set("config", encodeURIComponent(JSON.stringify(state)));
+      history.replaceState({}, "", location.pathname + "?" + params.toString());
+    }
+    function e(id) { return document.getElementById(id); }
+    function safeDomain(url) {
+      try { return new URL(url).hostname.replace(/^www\./, ""); }
+      catch { return "yourdomain.com"; }
+    }
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+    function countChars(value, weighted = false) {
+      const str = String(value || "");
+      if (!weighted) return str.length;
+      return Array.from(str).reduce((sum, ch) => sum + (DOUBLE_WIDTH_RE.test(ch) ? 2 : 1), 0);
+    }
+    function isGoogleWeighted(channel) {
+      return channel === 'googleSearch' || channel === 'googleDisplay';
+    }
+    function counterHtml(value, limit, weighted = false) {
+      const len = countChars(value, weighted);
+      const over = len > limit;
+      return `<span class="counter ${over ? 'over' : ''}">${len}/${limit}</span>`;
+    }
+    function statusPill(label) {
+      return `<span class="count-pill">${label}</span>`;
+    }
+    function rotateTake(arr, amount) {
+      const clean = (arr || []).map(v => (v || '').trim()).filter(Boolean);
+      if (!clean.length) return [];
+      const offset = state.seed % clean.length;
+      return clean.slice(offset).concat(clean.slice(0, offset)).slice(0, amount);
+    }
+    function pickPinnedAssets(items, pins, slots) {
+      const clean = (items || []).map((text, index) => ({
+        text: String(text || '').trim(),
+        pin: String((pins || [])[index] || ''),
+        index
+      })).filter(item => item.text);
+      const chosen = new Array(slots).fill('');
+      const pinnedIndexes = new Set();
+      for (let pos = 1; pos <= slots; pos += 1) {
+        const candidates = clean.filter(item => item.pin === String(pos));
+        if (!candidates.length) continue;
+        const choice = candidates[state.seed % candidates.length];
+        chosen[pos - 1] = choice.text;
+        candidates.forEach(item => pinnedIndexes.add(item.index));
+      }
+      const unpinned = clean.filter(item => !item.pin && !pinnedIndexes.has(item.index)).map(item => item.text);
+      const rotated = rotateTake(unpinned, slots);
+      for (let i = 0; i < slots; i += 1) {
+        if (!chosen[i]) chosen[i] = rotated.shift() || '';
+      }
+      return chosen.filter(Boolean);
+    }
+    function setByPath(path, value) {
+      const parts = path.split('.');
+      let ref = state;
+      while (parts.length > 1) ref = ref[parts.shift()];
+      ref[parts[0]] = value;
+    }
+    function listEditor(opts) {
+      const { label, channel, key, items, limit, maxItems, multiline = false, weighted = false, hint = '', pinOptions = null, pins = [] } = opts;
+      const safeItems = (items && items.length ? items : ['']);
+      return `
+        <div class="field">
+          <div class="field-top">
+            <label>${label}</label>
+            <button class="small-btn" type="button" data-add-list data-channel="${channel}" data-key="${key}" data-max="${maxItems}">+ Add</button>
+          </div>
+          ${hint ? `<div class="helper-note">${hint}</div>` : ''}
+          ${safeItems.map((item, idx) => `
+            <div class="list-item">
+              <div class="list-head">
+                <span>${label.replace(/s$/, '')} ${idx + 1}</span>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                  ${limit ? counterHtml(item, limit, weighted) : ''}
+                  <button class="small-btn" type="button" data-remove-list data-channel="${channel}" data-key="${key}" data-index="${idx}">Remove</button>
+                </div>
+              </div>
+              ${multiline
+                ? `<textarea data-list-input data-channel="${channel}" data-key="${key}" data-index="${idx}">${escapeHtml(item)}</textarea>`
+                : `<input type="text" data-list-input data-channel="${channel}" data-key="${key}" data-index="${idx}" value="${escapeHtml(item)}" />`}
+              ${pinOptions ? `
+                <div class="field-top" style="margin-top:10px;">
+                  <label style="font-size:12px;">Pin position</label>
+                  <span class="muted" style="font-size:12px;">Optional RSA pinning</span>
+                </div>
+                <select data-pin-select data-channel="${channel}" data-key="${key}" data-index="${idx}">
+                  <option value="">Unpinned</option>
+                  ${pinOptions.map(option => `<option value="${option.value}" ${String((pins || [])[idx] || '') === String(option.value) ? 'selected' : ''}>${option.label}</option>`).join('')}
+                </select>` : ''}
+            </div>`).join('')}
+        </div>`;
+    }
+
+    function imageField(label, path, value, hint) {
+      return `
+        <div class="field">
+          <div class="field-top"><label>${label}</label><span class="muted" style="font-size:12px;">${hint || ''}</span></div>
+          <input type="url" data-bind="${path}" value="${escapeHtml(value || '')}" placeholder="Paste image URL" />
+          <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <label class="btn small-btn" style="display:inline-block;">
+              Upload image
+              <input type="file" accept="image/*" data-upload="${path}" class="hide" />
+            </label>
+          </div>
+          <div class="asset-preview"><img src="${escapeHtml(value || PLACEHOLDER_IMAGE)}" onerror="this.src='${PLACEHOLDER_IMAGE}'" /></div>
+        </div>`;
+    }
+
+    function carouselEditor(opts) {
+      const { label, channel, key, cards, maxItems, descriptionLabel = 'Description' } = opts;
+      const safeCards = cards && cards.length ? cards : [channel === 'meta' ? defaultMetaCard(1) : defaultLinkedInCard(1)];
+      return `
+        <div class="field">
+          <div class="field-top">
+            <label>${label}</label>
+            <button class="small-btn" type="button" data-add-card data-channel="${channel}" data-key="${key}" data-max="${maxItems}">+ Add card</button>
+          </div>
+          <div class="helper-note">Each card keeps its own image, headline and destination URL.</div>
+          <div class="asset-grid" style="margin-top:12px;">
+            ${safeCards.map((card, idx) => `
+              <div class="card-block">
+                <div class="card-head">
+                  <h4>Card ${idx + 1}</h4>
+                  <button class="small-btn" type="button" data-remove-card data-channel="${channel}" data-key="${key}" data-index="${idx}">Remove</button>
+                </div>
+                <div class="stack-tight">
+                  <div class="field-top"><label>Card image</label></div>
+                  <input type="url" data-card-field data-channel="${channel}" data-key="${key}" data-index="${idx}" data-field="image" value="${escapeHtml(card.image || '')}" placeholder="Paste image URL" />
+                  <label class="btn small-btn" style="display:inline-block;width:fit-content;">
+                    Upload image
+                    <input type="file" accept="image/*" class="hide" data-card-upload data-channel="${channel}" data-key="${key}" data-index="${idx}" data-field="image" />
+                  </label>
+                  <div class="card-inline-preview"><img src="${escapeHtml(card.image || PLACEHOLDER_SQUARE)}" onerror="this.src='${PLACEHOLDER_SQUARE}'" /></div>
+                  <div class="field-top"><label>Card headline</label>${counterHtml(card.headline || '', channel === 'meta' ? LIMITS.meta.headline : 45, false)}</div>
+                  <input type="text" data-card-field data-channel="${channel}" data-key="${key}" data-index="${idx}" data-field="headline" value="${escapeHtml(card.headline || '')}" />
+                  <div class="field-top"><label>${descriptionLabel}</label>${counterHtml(card.description || '', channel === 'meta' ? LIMITS.meta.description : LIMITS.linkedin.descriptionRecommended, false)}</div>
+                  <input type="text" data-card-field data-channel="${channel}" data-key="${key}" data-index="${idx}" data-field="description" value="${escapeHtml(card.description || '')}" />
+                  <div class="field-top"><label>Card URL</label></div>
+                  <input type="url" data-card-field data-channel="${channel}" data-key="${key}" data-index="${idx}" data-field="url" value="${escapeHtml(card.url || '')}" />
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    function bindEditorEvents() {
+      document.querySelectorAll('[data-bind]').forEach(input => {
+        const handler = () => { setByPath(input.dataset.bind, input.value); render(); };
+        input.addEventListener('input', handler);
+        input.addEventListener('change', handler);
+      });
+      document.querySelectorAll('[data-path-index]').forEach(input => {
+        input.addEventListener('input', () => {
+          state.googleSearch.paths[Number(input.dataset.pathIndex)] = input.value;
+          render();
+        });
+      });
+      document.querySelectorAll('[data-list-input]').forEach(input => {
+        input.addEventListener('input', () => {
+          state[input.dataset.channel][input.dataset.key][Number(input.dataset.index)] = input.value;
+          render();
+        });
+      });
+      document.querySelectorAll('[data-pin-select]').forEach(select => {
+        select.addEventListener('change', () => {
+          const channel = select.dataset.channel;
+          const key = select.dataset.key;
+          const pinKey = key === 'headlines' ? 'headlinePins' : key === 'descriptions' ? 'descriptionPins' : '';
+          if (!pinKey) return;
+          state[channel][pinKey][Number(select.dataset.index)] = select.value;
+          render();
+        });
+      });
+      document.querySelectorAll('[data-add-list]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const channel = btn.dataset.channel;
+          const key = btn.dataset.key;
+          const list = state[channel][key];
+          if (list.length < Number(btn.dataset.max)) {
+            list.push('');
+            if (channel === 'googleSearch' && key === 'headlines') state.googleSearch.headlinePins.push('');
+            if (channel === 'googleSearch' && key === 'descriptions') state.googleSearch.descriptionPins.push('');
+          }
+          render();
+        });
+      });
+      document.querySelectorAll('[data-remove-list]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const channel = btn.dataset.channel;
+          const key = btn.dataset.key;
+          const index = Number(btn.dataset.index);
+          const next = state[channel][key].filter((_, i) => i !== index);
+          state[channel][key] = next.length ? next : [''];
+          if (channel === 'googleSearch' && key === 'headlines') {
+            state.googleSearch.headlinePins = state.googleSearch.headlinePins.filter((_, i) => i !== index);
+            if (!state.googleSearch.headlinePins.length) state.googleSearch.headlinePins = [''];
+          }
+          if (channel === 'googleSearch' && key === 'descriptions') {
+            state.googleSearch.descriptionPins = state.googleSearch.descriptionPins.filter((_, i) => i !== index);
+            if (!state.googleSearch.descriptionPins.length) state.googleSearch.descriptionPins = [''];
+          }
+          render();
+        });
+      });
+      document.querySelectorAll('[data-upload]').forEach(input => {
+        input.addEventListener('change', () => {
+          const file = input.files && input.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => { setByPath(input.dataset.upload, String(reader.result || '')); render(); };
+          reader.readAsDataURL(file);
+        });
+      });
+      document.querySelectorAll('[data-card-field]').forEach(input => {
+        input.addEventListener('input', () => {
+          const card = state[input.dataset.channel][input.dataset.key][Number(input.dataset.index)];
+          card[input.dataset.field] = input.value;
+          render();
+        });
+      });
+      document.querySelectorAll('[data-card-upload]').forEach(input => {
+        input.addEventListener('change', () => {
+          const file = input.files && input.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            const card = state[input.dataset.channel][input.dataset.key][Number(input.dataset.index)];
+            card[input.dataset.field] = String(reader.result || '');
+            render();
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+      document.querySelectorAll('[data-add-card]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const channel = btn.dataset.channel;
+          const key = btn.dataset.key;
+          const max = Number(btn.dataset.max);
+          const cards = state[channel][key];
+          if (cards.length >= max) return;
+          cards.push(channel === 'meta' ? defaultMetaCard(cards.length + 1) : defaultLinkedInCard(cards.length + 1));
+          render();
+        });
+      });
+      document.querySelectorAll('[data-remove-card]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const channel = btn.dataset.channel;
+          const key = btn.dataset.key;
+          const next = state[channel][key].filter((_, i) => i !== Number(btn.dataset.index));
+          state[channel][key] = next.length ? next : [channel === 'meta' ? defaultMetaCard(1) : defaultLinkedInCard(1)];
+          render();
+        });
+      });
+    }
+
+    function renderTabs() {
+      e('channelTabs').innerHTML = CHANNELS.map(([key, label]) =>
+        `<button class="${state.channel === key ? 'active' : ''}" data-channel="${key}">${label}</button>`).join('');
+      [...e('channelTabs').querySelectorAll('button')].forEach(btn => {
+        btn.onclick = () => { state.channel = btn.dataset.channel; render(); };
+      });
+    }
+
+    function renderEditor() {
+      const c = state.channel;
+      const root = e('editorCard');
+      let html = '';
+
+      if (c === 'googleSearch') {
+        html = `
+          <h3>Google Search inputs</h3>
+          <p class="hint">Lifelike responsive search preview with stricter Google validation.</p>
+          <div class="field"><div class="field-top"><label>Search query label</label></div><input type="text" data-bind="googleSearch.query" value="${escapeHtml(state.googleSearch.query)}" /></div>
+          <div class="field"><div class="field-top"><label>Final URL</label></div><input type="url" data-bind="googleSearch.finalUrl" value="${escapeHtml(state.googleSearch.finalUrl)}" /></div>
+          <div class="field-row">
+            <div class="field"><div class="field-top"><label>Path 1</label>${counterHtml(state.googleSearch.paths[0] || '', LIMITS.googleSearch.path, true)}</div><input type="text" data-path-index="0" value="${escapeHtml(state.googleSearch.paths[0] || '')}" /></div>
+            <div class="field"><div class="field-top"><label>Path 2</label>${counterHtml(state.googleSearch.paths[1] || '', LIMITS.googleSearch.path, true)}</div><input type="text" data-path-index="1" value="${escapeHtml(state.googleSearch.paths[1] || '')}" /></div>
+          </div>
+          <div class="count-row">${statusPill(`Headlines: ${state.googleSearch.headlines.filter(Boolean).length}/${LIMITS.googleSearch.headlinesMin}-${LIMITS.googleSearch.headlinesMax}`)}${statusPill(`Descriptions: ${state.googleSearch.descriptions.filter(Boolean).length}/${LIMITS.googleSearch.descriptionsMin}-${LIMITS.googleSearch.descriptionsMax}`)}</div>
+          <div class="helper-note">Google responsive search ads allow up to 30 characters per headline, 90 per description, and 15 per path. Google also counts double-width characters as 2. You can now pin headlines to positions 1-3 and descriptions to positions 1-2.</div>
+          ${listEditor({ label: 'Headlines', channel: 'googleSearch', key: 'headlines', items: state.googleSearch.headlines, limit: LIMITS.googleSearch.headline, maxItems: LIMITS.googleSearch.headlinesMax, weighted: true, pinOptions: [{ value: '1', label: 'Headline 1' }, { value: '2', label: 'Headline 2' }, { value: '3', label: 'Headline 3' }], pins: state.googleSearch.headlinePins })}
+          ${listEditor({ label: 'Descriptions', channel: 'googleSearch', key: 'descriptions', items: state.googleSearch.descriptions, limit: LIMITS.googleSearch.description, maxItems: LIMITS.googleSearch.descriptionsMax, multiline: true, weighted: true, pinOptions: [{ value: '1', label: 'Description 1' }, { value: '2', label: 'Description 2' }], pins: state.googleSearch.descriptionPins })}
+          ${listEditor({ label: 'Callouts', channel: 'googleSearch', key: 'callouts', items: state.googleSearch.callouts, maxItems: 8 })}
+          ${listEditor({ label: 'Sitelinks', channel: 'googleSearch', key: 'sitelinks', items: state.googleSearch.sitelinks, maxItems: 8 })}
+        `;
+      }
+
+      if (c === 'googleDisplay') {
+        html = `
+          <h3>Google Responsive Display inputs</h3>
+          <p class="hint">Asset-based creative plus 10 example placements across desktop and mobile.</p>
+          <div class="field"><div class="field-top"><label>Final URL</label></div><input type="url" data-bind="googleDisplay.finalUrl" value="${escapeHtml(state.googleDisplay.finalUrl)}" /></div>
+          <div class="field"><div class="field-top"><label>Business name</label>${counterHtml(state.googleDisplay.businessName, LIMITS.googleDisplay.businessName, true)}</div><input type="text" data-bind="googleDisplay.businessName" value="${escapeHtml(state.googleDisplay.businessName)}" /></div>
+          <div class="field"><div class="field-top"><label>Long headline</label>${counterHtml(state.googleDisplay.longHeadline, LIMITS.googleDisplay.longHeadline, true)}</div><input type="text" data-bind="googleDisplay.longHeadline" value="${escapeHtml(state.googleDisplay.longHeadline)}" /></div>
+          <div class="field"><div class="field-top"><label>CTA</label></div><input type="text" data-bind="googleDisplay.cta" value="${escapeHtml(state.googleDisplay.cta)}" /></div>
+          <div class="count-row">${statusPill(`Short headlines: ${state.googleDisplay.shortHeadlines.filter(Boolean).length}/${LIMITS.googleDisplay.shortHeadlinesMin}-${LIMITS.googleDisplay.shortHeadlinesMax}`)}${statusPill(`Descriptions: ${state.googleDisplay.descriptions.filter(Boolean).length}/${LIMITS.googleDisplay.descriptionsMin}-${LIMITS.googleDisplay.descriptionsMax}`)}</div>
+          <div class="helper-note">Google responsive display ads use up to 5 short headlines at 30 characters, one long headline at 90, descriptions at 90, and business name at 25. Google may remix these across many layouts.</div>
+          ${listEditor({ label: 'Short headlines', channel: 'googleDisplay', key: 'shortHeadlines', items: state.googleDisplay.shortHeadlines, limit: LIMITS.googleDisplay.shortHeadline, maxItems: LIMITS.googleDisplay.shortHeadlinesMax, weighted: true })}
+          ${listEditor({ label: 'Descriptions', channel: 'googleDisplay', key: 'descriptions', items: state.googleDisplay.descriptions, limit: LIMITS.googleDisplay.description, maxItems: LIMITS.googleDisplay.descriptionsMax, multiline: true, weighted: true })}
+          ${imageField('Landscape image (1.91:1)', 'googleDisplay.landscapeImage', state.googleDisplay.landscapeImage, 'Recommended for banner/native examples')}
+          ${imageField('Square image (1:1)', 'googleDisplay.squareImage', state.googleDisplay.squareImage, 'Recommended for feed/mobile examples')}
+          ${imageField('Logo image', 'googleDisplay.logoImage', state.googleDisplay.logoImage, 'Square logo recommended')}
+        `;
+      }
+
+      if (c === 'meta') {
+        html = `
+          <h3>Meta / Instagram inputs</h3>
+          <p class="hint">Feed, carousel, Story and Reels previews. Story and Reels include safe-area overlays.</p>
+          <div class="field"><div class="field-top"><label>Brand / advertiser</label></div><input type="text" data-bind="meta.brand" value="${escapeHtml(state.meta.brand)}" /></div>
+          <div class="field"><div class="field-top"><label>Page / profile name</label></div><input type="text" data-bind="meta.pageName" value="${escapeHtml(state.meta.pageName)}" /></div>
+          <div class="field"><div class="field-top"><label>Final URL</label></div><input type="url" data-bind="meta.finalUrl" value="${escapeHtml(state.meta.finalUrl)}" /></div>
+          <div class="field-row">
+            <div class="field"><div class="field-top"><label>Headline</label>${counterHtml(state.meta.headline, LIMITS.meta.headline)}</div><input type="text" data-bind="meta.headline" value="${escapeHtml(state.meta.headline)}" /></div>
+            <div class="field"><div class="field-top"><label>Description</label>${counterHtml(state.meta.description, LIMITS.meta.description)}</div><input type="text" data-bind="meta.description" value="${escapeHtml(state.meta.description)}" /></div>
+          </div>
+          <div class="field"><div class="field-top"><label>CTA</label></div><input type="text" data-bind="meta.cta" value="${escapeHtml(state.meta.cta)}" /></div>
+          <div class="field"><div class="field-top"><label>Primary text</label>${counterHtml(state.meta.primaryText, LIMITS.meta.primary)}</div><textarea data-bind="meta.primaryText">${escapeHtml(state.meta.primaryText)}</textarea></div>
+          <div class="count-row">${statusPill(`Carousel cards: ${state.meta.cards.length}/${LIMITS.meta.cardsMin}-${LIMITS.meta.cardsMax}`)}${statusPill(`Preview: ${META_VARIANTS.find(v => v[0] === state.metaPlacement)?.[1] || 'Meta'}`)}</div>
+          ${imageField('Primary image', 'meta.image', state.meta.image, 'Used for feed, Story and Reels mockups')}
+          ${carouselEditor({ label: 'Carousel cards', channel: 'meta', key: 'cards', cards: state.meta.cards, maxItems: LIMITS.meta.cardsMax, descriptionLabel: 'Card description' })}
+        `;
+      }
+
+      if (c === 'linkedin') {
+        html = `
+          <h3>LinkedIn inputs</h3>
+          <p class="hint">Single image and carousel previews for sponsored content.</p>
+          <div class="field"><div class="field-top"><label>Company</label></div><input type="text" data-bind="linkedin.company" value="${escapeHtml(state.linkedin.company)}" /></div>
+          <div class="field"><div class="field-top"><label>Final URL</label></div><input type="url" data-bind="linkedin.finalUrl" value="${escapeHtml(state.linkedin.finalUrl)}" /></div>
+          <div class="field"><div class="field-top"><label>Headline</label>${counterHtml(state.linkedin.headline, LIMITS.linkedin.headlineRecommended)}</div><input type="text" data-bind="linkedin.headline" value="${escapeHtml(state.linkedin.headline)}" /></div>
+          <div class="field"><div class="field-top"><label>Description</label>${counterHtml(state.linkedin.description, LIMITS.linkedin.descriptionRecommended)}</div><input type="text" data-bind="linkedin.description" value="${escapeHtml(state.linkedin.description)}" /></div>
+          <div class="field"><div class="field-top"><label>CTA</label></div><input type="text" data-bind="linkedin.cta" value="${escapeHtml(state.linkedin.cta)}" /></div>
+          <div class="field"><div class="field-top"><label>Intro text</label>${counterHtml(state.linkedin.introText, LIMITS.linkedin.introRecommended)}</div><textarea data-bind="linkedin.introText">${escapeHtml(state.linkedin.introText)}</textarea></div>
+          <div class="helper-note">These LinkedIn counters are practical visibility guardrails rather than hard first-party validation.</div>
+          <div class="count-row">${statusPill(`Carousel cards: ${state.linkedin.cards.length}/${LIMITS.linkedin.cardsMin}-${LIMITS.linkedin.cardsMax}`)}${statusPill(`Preview: ${LINKEDIN_VARIANTS.find(v => v[0] === state.linkedinLayout)?.[1] || 'LinkedIn'}`)}</div>
+          ${imageField('Main image', 'linkedin.image', state.linkedin.image, 'Landscape works best for the single image preview')}
+          ${imageField('Logo', 'linkedin.logo', state.linkedin.logo, 'Square logo recommended')}
+          ${carouselEditor({ label: 'Carousel cards', channel: 'linkedin', key: 'cards', cards: state.linkedin.cards, maxItems: LIMITS.linkedin.cardsMax, descriptionLabel: 'Short supporting copy' })}
+        `;
+      }
+
+      if (c === 'youtube') {
+        html = `
+          <h3>YouTube inputs</h3>
+          <p class="hint">YouTube-style ad previews across in-feed, Watch Next and Shorts.</p>
+          <div class="field"><div class="field-top"><label>Advertiser</label></div><input type="text" data-bind="youtube.advertiser" value="${escapeHtml(state.youtube.advertiser)}" /></div>
+          <div class="field"><div class="field-top"><label>Channel name</label></div><input type="text" data-bind="youtube.channelName" value="${escapeHtml(state.youtube.channelName)}" /></div>
+          <div class="field"><div class="field-top"><label>Final URL</label></div><input type="url" data-bind="youtube.finalUrl" value="${escapeHtml(state.youtube.finalUrl)}" /></div>
+          <div class="field"><div class="field-top"><label>Headline</label>${counterHtml(state.youtube.headline, LIMITS.youtube.headline)}</div><input type="text" data-bind="youtube.headline" value="${escapeHtml(state.youtube.headline)}" /></div>
+          <div class="field-row">
+            <div class="field"><div class="field-top"><label>Description line 1</label>${counterHtml(state.youtube.description1, LIMITS.youtube.description)}</div><input type="text" data-bind="youtube.description1" value="${escapeHtml(state.youtube.description1)}" /></div>
+            <div class="field"><div class="field-top"><label>Description line 2</label>${counterHtml(state.youtube.description2, LIMITS.youtube.description)}</div><input type="text" data-bind="youtube.description2" value="${escapeHtml(state.youtube.description2)}" /></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><div class="field-top"><label>CTA</label></div><input type="text" data-bind="youtube.cta" value="${escapeHtml(state.youtube.cta)}" /></div>
+            <div class="field"><div class="field-top"><label>Video length label</label></div><input type="text" data-bind="youtube.videoLength" value="${escapeHtml(state.youtube.videoLength)}" /></div>
+          </div>
+          ${imageField('Thumbnail image', 'youtube.thumbnail', state.youtube.thumbnail, 'Used as the video thumbnail in previews')}
+          ${imageField('Channel logo', 'youtube.logo', state.youtube.logo, 'Square logo recommended')}
+          <div class="helper-note">These YouTube counters are practical preview guardrails for the chosen layouts.</div>
+        `;
+      }
+
+      root.innerHTML = html;
+      bindEditorEvents();
+    }
+
+    function renderPreviewTabs() {
+      const sub = e('previewSubtabs');
+      let items = [];
+      let stateKey = null;
+      if (state.channel === 'googleSearch') { items = [["desktop", "Desktop"], ["mobile", "Mobile"]]; stateKey = 'searchDevice'; }
+      if (state.channel === 'googleDisplay') { items = DISPLAY_VARIANTS; stateKey = 'displayVariant'; }
+      if (state.channel === 'meta') { items = META_VARIANTS; stateKey = 'metaPlacement'; }
+      if (state.channel === 'linkedin') { items = LINKEDIN_VARIANTS; stateKey = 'linkedinLayout'; }
+      if (state.channel === 'youtube') { items = YOUTUBE_VARIANTS; stateKey = 'youtubeFormat'; }
+      sub.innerHTML = items.map(([key, label]) => `<button class="${state[stateKey] === key ? 'active' : ''}" data-variant-key="${key}">${label}</button>`).join('');
+      [...sub.querySelectorAll('[data-variant-key]')].forEach(btn => {
+        btn.onclick = () => { state[stateKey] = btn.dataset.variantKey; render(); };
+      });
+    }
+
+    function renderGoogleSearch(root) {
+      const g = state.googleSearch;
+      const mobile = state.searchDevice === 'mobile';
+      const path = (g.paths || []).filter(Boolean).slice(0, 2).join('/');
+      const headlineAssets = pickPinnedAssets(g.headlines, g.headlinePins, mobile ? 2 : 3);
+      const descriptionAssets = pickPinnedAssets(g.descriptions, g.descriptionPins, mobile ? 1 : 2);
+      const headlines = headlineAssets.join(' · ') || 'Your search ad headline preview';
+      const descriptions = descriptionAssets.join(' ') || 'Your descriptions will appear here once you start typing.';
+      const callouts = rotateTake(g.callouts, 4);
+      const sitelinks = rotateTake(g.sitelinks, 4);
+      const domain = safeDomain(g.finalUrl);
+      root.innerHTML = `
+        <div class="google-shell ${mobile ? 'mobile' : ''}" style="max-width:${mobile ? '430px' : '920px'};">
+          <div class="google-chrome">
+            <div class="google-top">
+              <div class="google-g">G</div>
+              <div class="google-searchbar">
+                <span>${escapeHtml(g.query || 'search query')}</span>
+                <div class="google-icons"><span>⌕</span><span>◎</span><span>◦◦</span></div>
+              </div>
+            </div>
+            <div class="google-nav"><b>All</b><span>Images</span><span>Videos</span><span>Shopping</span><span>News</span><span>More</span><span>Tools</span></div>
+          </div>
+          <div class="google-results">
+            <div class="google-meta">
+              <div class="google-favicon">${escapeHtml(domain.charAt(0).toUpperCase())}</div>
+              <div class="google-meta-lines">
+                <div class="google-brandline"><span>${escapeHtml(domain)}</span><small>Sponsored</small></div>
+                <div class="google-url">${escapeHtml(domain)}${path ? '/' + escapeHtml(path) : ''}</div>
+              </div>
+            </div>
+            <div class="google-title">${escapeHtml(headlines)}</div>
+            <div class="google-desc">${escapeHtml(descriptions)}</div>
+            ${callouts.length ? `<div class="google-assets">${callouts.map(v => `<span class="google-asset-pill">${escapeHtml(v)}</span>`).join('')}</div>` : ''}
+            ${sitelinks.length ? `<div class="google-sitelinks">${sitelinks.map(v => `<div class="google-sitelink"><strong>${escapeHtml(v)}</strong><small>${escapeHtml(domain)}</small></div>`).join('')}</div>` : ''}
+          </div>
+        </div>
+        <div class="preview-note">This preview validates Google search text using Google-style character counting for double-width characters and respects RSA-style pinning for headline positions 1-3 and description positions 1-2.</div>`;
+    }
+
+    function renderGoogleDisplay(root) {
+      const g = state.googleDisplay;
+      const sh = rotateTake(g.shortHeadlines, 1)[0] || 'Short display headline';
+      const desc = rotateTake(g.descriptions, 1)[0] || 'Description preview';
+      const domain = safeDomain(g.finalUrl);
+      const logo = escapeHtml(g.logoImage || PLACEHOLDER_LOGO);
+      const landscape = escapeHtml(g.landscapeImage || PLACEHOLDER_IMAGE);
+      const square = escapeHtml(g.squareImage || PLACEHOLDER_SQUARE);
+      const cta = escapeHtml(g.cta || 'Learn more');
+      const business = escapeHtml(g.businessName || 'Business name');
+      const longHeadline = escapeHtml(g.longHeadline || 'Long display headline');
+      const shortHeadline = escapeHtml(sh);
+      const description = escapeHtml(desc);
+      const variant = state.displayVariant;
+      const phoneShellStart = `<div style="max-width:390px;border:1px solid var(--border);border-radius:30px;background:#fff;box-shadow:var(--shadow);overflow:hidden;">`;
+      const phoneShellEnd = `</div>`;
+
+      if (variant === 'desktopNative') {
+        root.innerHTML = `
+          <div class="display-native" style="max-width:520px;"><div class="body"><div class="native-head"><img class="logo-sm" src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div style="font-weight:700;">${business}</div><div class="muted" style="font-size:12px;">Responsive display · native desktop</div></div></div><img class="preview-img" src="${landscape}" onerror="this.src='${PLACEHOLDER_IMAGE}'" /><div class="headline-md">${shortHeadline}</div><div class="desc">${description}</div><button class="primary" style="margin-top:14px;">${cta}</button></div></div>`;
+      } else if (variant === 'desktopBanner') {
+        root.innerHTML = `
+          <div class="display-banner"><div class="layout"><img class="preview-img" src="${landscape}" onerror="this.src='${PLACEHOLDER_IMAGE}'" /><div class="body"><div class="kicker">Desktop banner</div><div style="margin-top:8px;font-weight:700;">${business}</div><div class="headline-lg">${longHeadline}</div><div class="desc">${description}</div><button class="primary" style="margin-top:14px;">${cta}</button></div></div></div>`;
+      } else if (variant === 'desktopRectangle') {
+        root.innerHTML = `
+          <div class="display-square" style="max-width:340px;"><img class="preview-img" src="${square}" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div class="body"><div class="native-head"><img class="logo-sm" src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div style="font-weight:700;">${business}</div><div class="muted" style="font-size:12px;">300×250 style</div></div></div><div class="headline-md">${shortHeadline}</div><div class="desc">${description}</div><button style="margin-top:14px;">${cta}</button></div></div>`;
+      } else if (variant === 'desktopSkyscraper') {
+        root.innerHTML = `
+          <div style="max-width:320px;border:1px solid var(--border);border-radius:24px;overflow:hidden;background:#fff;box-shadow:var(--shadow);"><img src="${square}" style="width:100%;aspect-ratio:1/1;object-fit:cover;display:block;" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div style="padding:16px;"><div class="native-head"><img class="logo-sm" src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div style="font-weight:700;">${business}</div><div class="muted" style="font-size:12px;">Skyscraper style</div></div></div><div class="headline-md">${longHeadline}</div><div class="desc">${description}</div><button class="primary" style="margin-top:14px;">${cta}</button></div></div>`;
+      } else if (variant === 'desktopGmail') {
+        root.innerHTML = `
+          <div style="max-width:620px;border:1px solid var(--border);border-radius:22px;background:#fff;box-shadow:var(--shadow);overflow:hidden;"><div style="padding:14px 16px;border-bottom:1px solid #eceff3;background:#f8fafc;color:#475467;font-size:13px;font-weight:700;">Promotions</div><div style="padding:16px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;"><img src="${logo}" style="width:42px;height:42px;border-radius:12px;object-fit:cover;" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div style="display:flex;justify-content:space-between;gap:10px;"><strong>${business}</strong><span class="muted" style="font-size:12px;">Ad</span></div><div style="margin-top:4px;font-size:15px;font-weight:700;">${longHeadline}</div><div class="desc" style="margin-top:6px;">${description}</div><div style="margin-top:10px;color:#188038;font-size:12px;">${escapeHtml(domain)}</div></div></div></div>`;
+      } else if (variant === 'mobileNative') {
+        root.innerHTML = `${phoneShellStart}<div class="display-native"><div class="body"><div class="native-head"><img class="logo-sm" src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div style="font-weight:700;">${business}</div><div class="muted" style="font-size:12px;">Mobile native</div></div></div><img class="preview-img" src="${landscape}" onerror="this.src='${PLACEHOLDER_IMAGE}'" /><div class="headline-md">${shortHeadline}</div><div class="desc">${description}</div><button class="primary" style="margin-top:14px;">${cta}</button></div></div>${phoneShellEnd}`;
+      } else if (variant === 'mobileSquare') {
+        root.innerHTML = `${phoneShellStart}<div class="display-square"><img class="preview-img" src="${square}" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div class="body"><div class="native-head"><img class="logo-sm" src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div style="font-weight:700;">${business}</div><div class="muted" style="font-size:12px;">Mobile square</div></div></div><div class="headline-md">${shortHeadline}</div><div class="desc">${description}</div><button style="margin-top:14px;">${cta}</button></div></div>${phoneShellEnd}`;
+      } else if (variant === 'mobileBanner') {
+        root.innerHTML = `${phoneShellStart}<div style="padding:12px;"><div style="display:grid;grid-template-columns:96px 1fr;gap:12px;border:1px solid var(--border);border-radius:18px;padding:12px;"><img src="${square}" style="width:96px;height:96px;border-radius:12px;object-fit:cover;" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div><div style="font-size:12px;color:#475467;">${business}</div><div style="font-size:16px;font-weight:700;line-height:1.35;margin-top:4px;">${shortHeadline}</div><div style="font-size:12px;color:#64748b;line-height:1.45;margin-top:6px;">${description}</div><button class="primary" style="margin-top:10px;">${cta}</button></div></div></div>${phoneShellEnd}`;
+      } else if (variant === 'mobileApp') {
+        root.innerHTML = `${phoneShellStart}<div style="padding:16px;"><div style="display:flex;align-items:center;gap:12px;"><img src="${logo}" style="width:54px;height:54px;border-radius:14px;object-fit:cover;" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div style="min-width:0;"><div style="font-size:16px;font-weight:700;">${business}</div><div style="font-size:13px;color:#64748b;">Sponsored app-style card</div></div></div><img src="${landscape}" style="width:100%;margin-top:14px;border-radius:18px;display:block;aspect-ratio:1.91/1;object-fit:cover;" onerror="this.src='${PLACEHOLDER_IMAGE}'" /><div style="font-size:18px;font-weight:700;line-height:1.35;margin-top:14px;">${shortHeadline}</div><div style="font-size:14px;color:#64748b;line-height:1.6;margin-top:6px;">${description}</div><button class="primary" style="margin-top:14px;">${cta}</button></div>${phoneShellEnd}`;
+      } else {
+        root.innerHTML = `${phoneShellStart}<div style="position:relative;"><img src="${square}" style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.62));display:flex;flex-direction:column;justify-content:flex-end;padding:18px;color:#fff;"><div style="font-size:12px;opacity:.84;">${business}</div><div style="font-size:24px;font-weight:800;line-height:1.15;margin-top:8px;">${shortHeadline}</div><div style="font-size:14px;line-height:1.55;margin-top:8px;">${description}</div><button style="margin-top:14px;background:#fff;color:#111827;border-color:#fff;">${cta}</button></div></div>${phoneShellEnd}`;
+      }
+      root.innerHTML += `<div class="preview-note">Responsive display is now shown through 10 example desktop/mobile layouts to better demonstrate how the same assets can reflow.</div>`;
+    }
+
+    function renderMeta(root) {
+      const m = state.meta;
+      const domain = safeDomain(m.finalUrl);
+      const placement = state.metaPlacement;
+      const image = escapeHtml(m.image || PLACEHOLDER_SQUARE);
+      const brand = escapeHtml(m.pageName || m.brand || 'Brand');
+      const primary = escapeHtml(m.primaryText || 'Primary text preview');
+      const headline = escapeHtml(m.headline || 'Headline preview');
+      const description = escapeHtml(m.description || 'Optional description');
+      const cta = escapeHtml(m.cta || 'Learn More');
+      if (placement === 'story' || placement === 'reels') {
+        const isReels = placement === 'reels';
+        root.innerHTML = `
+          <div class="safe-preview">
+            <div class="safe-canvas">
+              <img src="${image}" onerror="this.src='${PLACEHOLDER_SQUARE}'" />
+              <div class="safe-top-fill"></div>
+              <div class="safe-bottom-fill"></div>
+              <div class="safe-zone-box"></div>
+              <div class="safe-zone-label">Keep text/logo inside</div>
+              <div class="story-top-ui">
+                <div><div style="font-weight:700;font-size:14px;">${brand}</div><div style="font-size:12px;opacity:.82;">Sponsored</div></div>
+                <div style="font-size:12px;background:rgba(255,255,255,.18);padding:7px 10px;border-radius:999px;">${isReels ? 'Reel ad' : 'Story ad'}</div>
+              </div>
+              <div class="safe-caption"><div class="kicker">${escapeHtml(domain)}</div><div class="headline-md">${headline}</div><div class="desc">${primary}</div></div>
+              ${isReels ? `<div class="reels-actions"><span>♥</span><span>💬</span><span>↗</span></div>` : ''}
+              <div class="story-bottom-ui"><button style="background:#fff;color:#111827;border-color:#fff;">${cta}</button></div>
+            </div>
+          </div>
+          <div class="preview-note">Safe-area shading shows space typically at risk of being covered by UI in Meta Story/Reels-style layouts.</div>`;
+        return;
+      }
+      if (placement === 'carousel') {
+        const cards = (m.cards || []).slice(0, 5);
+        root.innerHTML = `
+          <div class="meta-carousel-shell" style="max-width:760px;">
+            <div class="header"><div class="meta-header"><img class="avatar" src="${image}" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div><div style="font-weight:700;">${brand}</div><div class="muted" style="font-size:12px;">Sponsored</div></div></div></div>
+            <div class="copy">${primary}</div>
+            <div class="meta-stage"><div class="carousel-track">${cards.map(card => `<div class="carousel-card"><img src="${escapeHtml(card.image || PLACEHOLDER_SQUARE)}" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div class="body"><div class="title">${escapeHtml(card.headline || 'Card headline')}</div><div class="desc">${escapeHtml(card.description || '')}</div><div class="url">${escapeHtml(safeDomain(card.url || m.finalUrl))}</div><button style="margin-top:10px;">${cta}</button></div></div>`).join('')}</div><div class="carousel-dots">${cards.map((_, i) => `<span class="${i === 0 ? 'active' : ''}"></span>`).join('')}</div></div>
+          </div>`;
+        return;
+      }
+      if (placement === 'instagram') {
+        root.innerHTML = `
+          <div class="meta-card" style="max-width:390px;">
+            <div class="body"><div class="meta-header"><div class="insta-ring"><img src="${image}" onerror="this.src='${PLACEHOLDER_SQUARE}'" /></div><div><div style="font-weight:700;">${brand}</div><div class="muted" style="font-size:12px;">Sponsored</div></div></div></div>
+            <img class="preview-img instagram-img" src="${image}" onerror="this.src='${PLACEHOLDER_SQUARE}'" />
+            <div class="body"><div style="font-size:15px;line-height:1.65;color:#374151;"><strong>${brand}</strong> ${primary}</div><div style="border:1px solid var(--border);border-radius:18px;padding:12px;margin-top:14px;"><div class="kicker">${escapeHtml(domain)}</div><div style="font-weight:700;margin-top:4px;">${headline}</div><div class="muted" style="font-size:12px;margin-top:4px;">${description}</div></div></div>
+          </div>`;
+        return;
+      }
+      root.innerHTML = `
+        <div class="meta-card" style="max-width:680px;">
+          <div class="body"><div class="meta-header"><img class="avatar" src="${image}" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div><div style="font-weight:700;">${brand}</div><div class="muted" style="font-size:12px;">Sponsored</div></div></div></div>
+          <div class="meta-copy">${primary}</div>
+          <img class="preview-img meta-body-img" src="${image}" onerror="this.src='${PLACEHOLDER_SQUARE}'" />
+          <div class="meta-footer"><div><div class="kicker">${escapeHtml(domain)}</div><div style="font-weight:700;margin-top:4px;">${headline}</div><div class="muted" style="font-size:12px;margin-top:4px;">${description}</div></div><button>${cta}</button></div>
+        </div>`;
+    }
+
+    function renderLinkedIn(root) {
+      const l = state.linkedin;
+      const domain = safeDomain(l.finalUrl);
+      const company = escapeHtml(l.company || 'Company');
+      const intro = escapeHtml(l.introText || 'Intro text preview');
+      const headline = escapeHtml(l.headline || 'Headline preview');
+      const description = escapeHtml(l.description || 'Description preview');
+      const cta = escapeHtml(l.cta || 'Learn More');
+      const image = escapeHtml(l.image || PLACEHOLDER_IMAGE);
+      const logo = escapeHtml(l.logo || PLACEHOLDER_LOGO);
+      if (state.linkedinLayout === 'carousel') {
+        const cards = (l.cards || []).slice(0, 5);
+        root.innerHTML = `
+          <div class="linkedin-carousel-shell" style="max-width:760px;">
+            <div class="header"><div class="linkedin-header"><img class="logo-sm" src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div style="font-weight:700;">${company}</div><div class="muted" style="font-size:12px;">Promoted</div></div></div></div>
+            <div class="copy">${intro}</div>
+            <div class="linkedin-stage"><div class="li-card-wrap">${cards.map(card => `<div class="li-carousel-card"><img src="${escapeHtml(card.image || PLACEHOLDER_SQUARE)}" onerror="this.src='${PLACEHOLDER_SQUARE}'" /><div class="body"><div class="title">${escapeHtml(card.headline || 'Card headline')}</div><div class="desc">${escapeHtml(card.description || '')}</div><div class="url" style="font-size:11px;color:#667085;margin-top:8px;">${escapeHtml(safeDomain(card.url || l.finalUrl))}</div><div class="cta">${cta}</div></div></div>`).join('')}</div><div class="carousel-dots">${cards.map((_, i) => `<span class="${i === 0 ? 'active' : ''}"></span>`).join('')}</div></div>
+          </div>`;
+        return;
+      }
+      root.innerHTML = `
+        <div class="linkedin-card" style="max-width:680px;">
+          <div class="body"><div class="linkedin-header"><img class="logo-sm" src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div style="font-weight:700;">${company}</div><div class="muted" style="font-size:12px;">Promoted</div></div></div><div style="margin-top:14px;font-size:15px;line-height:1.65;color:#374151;">${intro}</div></div>
+          <img class="preview-img linkedin-img" src="${image}" onerror="this.src='${PLACEHOLDER_IMAGE}'" />
+          <div class="linkedin-footer"><div><div class="kicker">${escapeHtml(domain)}</div><div style="font-weight:700;margin-top:4px;">${headline}</div><div class="muted" style="font-size:12px;margin-top:4px;">${description}</div></div><button>${cta}</button></div>
+        </div>`;
+    }
+
+    function renderYouTube(root) {
+      const y = state.youtube;
+      const logo = escapeHtml(y.logo || PLACEHOLDER_LOGO);
+      const thumb = escapeHtml(y.thumbnail || PLACEHOLDER_IMAGE);
+      const advertiser = escapeHtml(y.advertiser || 'Advertiser');
+      const channelName = escapeHtml(y.channelName || advertiser);
+      const headline = escapeHtml(y.headline || 'Headline preview');
+      const description1 = escapeHtml(y.description1 || 'Description line 1');
+      const description2 = escapeHtml(y.description2 || 'Description line 2');
+      const cta = escapeHtml(y.cta || 'Learn more');
+      const duration = escapeHtml(y.videoLength || '0:15');
+      const domain = safeDomain(y.finalUrl);
+      if (state.youtubeFormat === 'shorts') {
+        root.innerHTML = `
+          <div class="yt-short-shell">
+            <div class="yt-short-stage"><img src="${thumb}" onerror="this.src='${PLACEHOLDER_IMAGE}'" /><div class="yt-short-overlay"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-weight:700;">Shorts ad</div><div style="background:rgba(255,255,255,.2);padding:6px 9px;border-radius:999px;font-size:12px;">${duration}</div></div><div><div style="font-size:12px;opacity:.82;">${channelName}</div><div style="font-size:22px;font-weight:800;line-height:1.15;margin-top:8px;">${headline}</div><div style="font-size:14px;line-height:1.5;margin-top:8px;">${description1}</div><button style="margin-top:14px;background:#fff;color:#111827;border-color:#fff;">${cta}</button></div></div><div class="yt-short-actions"><span>👍</span><span>💬</span><span>↗</span></div></div>
+          </div>`;
+        return;
+      }
+      if (state.youtubeFormat === 'watchnext') {
+        root.innerHTML = `
+          <div class="youtube-shell" style="max-width:760px;">
+            <div class="header" style="padding-bottom:0;"><div class="yt-thumb"><img src="${thumb}" onerror="this.src='${PLACEHOLDER_IMAGE}'" /><div class="yt-play">▶</div><div class="yt-duration">${duration}</div></div></div>
+            <div class="yt-watch-card"><div class="meta"><div class="yt-meta"><div class="title">${headline}</div><div class="yt-channel"><img src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div>${channelName}</div><div style="font-size:12px;color:#64748b;">Sponsored · ${escapeHtml(domain)}</div></div></div><div class="desc">${description1} ${description2}</div><button class="primary" style="margin-top:14px;">${cta}</button></div></div></div>
+          </div>`;
+        return;
+      }
+      root.innerHTML = `
+        <div class="youtube-shell" style="max-width:820px;">
+          <div class="header"><div class="yt-layout"><div class="yt-thumb"><img src="${thumb}" onerror="this.src='${PLACEHOLDER_IMAGE}'" /><div class="yt-play">▶</div><div class="yt-duration">${duration}</div></div><div class="yt-meta"><div class="title">${headline}</div><div class="yt-channel"><img src="${logo}" onerror="this.src='${PLACEHOLDER_LOGO}'" /><div><div>${channelName}</div><div style="font-size:12px;color:#64748b;">Sponsored · ${advertiser}</div></div></div><div class="desc">${description1}<br />${description2}</div><button class="primary" style="margin-top:14px;">${cta}</button><div class="preview-note" style="margin-top:10px;">${escapeHtml(domain)}</div></div></div></div>
+        </div>`;
+    }
+
+    function renderPreview() {
+      const root = e('previewRoot');
+      if (state.channel === 'googleSearch') return renderGoogleSearch(root);
+      if (state.channel === 'googleDisplay') return renderGoogleDisplay(root);
+      if (state.channel === 'meta') return renderMeta(root);
+      if (state.channel === 'linkedin') return renderLinkedIn(root);
+      if (state.channel === 'youtube') return renderYouTube(root);
+    }
+
+    function diagField(label, value, limit, note, weighted = false) {
+      const count = countChars(value, weighted);
+      return { label, note, badge: `${count}/${limit}`, over: count > limit };
+    }
+    function diagRange(label, count, min, max, note) {
+      return { label, note, badge: `${count}/${min}-${max}`, over: count < min || count > max };
+    }
+    function renderDiagnostics() {
+      const d = e('diagnostics');
+      let items = [];
+      if (state.channel === 'googleSearch') {
+        items = [
+          diagField('Path 1', state.googleSearch.paths[0] || '', LIMITS.googleSearch.path, 'Google path limit', true),
+          diagField('Path 2', state.googleSearch.paths[1] || '', LIMITS.googleSearch.path, 'Google path limit', true),
+          diagField('Headline 1', state.googleSearch.headlines[0] || '', LIMITS.googleSearch.headline, 'Google headline limit', true),
+          diagField('Headline 2', state.googleSearch.headlines[1] || '', LIMITS.googleSearch.headline, 'Google headline limit', true),
+          diagField('Description 1', state.googleSearch.descriptions[0] || '', LIMITS.googleSearch.description, 'Google description limit', true),
+          diagField('Description 2', state.googleSearch.descriptions[1] || '', LIMITS.googleSearch.description, 'Google description limit', true),
+          { label: 'Pinned headlines', note: 'Headline positions 1-3', badge: String(state.googleSearch.headlinePins.filter(Boolean).length), over: false },
+          { label: 'Pinned descriptions', note: 'Description positions 1-2', badge: String(state.googleSearch.descriptionPins.filter(Boolean).length), over: false },
+          diagRange('Headline count', state.googleSearch.headlines.filter(Boolean).length, LIMITS.googleSearch.headlinesMin, LIMITS.googleSearch.headlinesMax, 'RSA asset count'),
+          diagRange('Description count', state.googleSearch.descriptions.filter(Boolean).length, LIMITS.googleSearch.descriptionsMin, LIMITS.googleSearch.descriptionsMax, 'RSA asset count')
+        ];
+      } else if (state.channel === 'googleDisplay') {
+        items = [
+          diagField('Business name', state.googleDisplay.businessName, LIMITS.googleDisplay.businessName, 'Google business name limit', true),
+          diagField('Long headline', state.googleDisplay.longHeadline, LIMITS.googleDisplay.longHeadline, 'Google long headline limit', true),
+          diagField('Short headline', state.googleDisplay.shortHeadlines[0] || '', LIMITS.googleDisplay.shortHeadline, 'Google short headline limit', true),
+          diagField('Description', state.googleDisplay.descriptions[0] || '', LIMITS.googleDisplay.description, 'Google description limit', true),
+          diagRange('Short headline count', state.googleDisplay.shortHeadlines.filter(Boolean).length, LIMITS.googleDisplay.shortHeadlinesMin, LIMITS.googleDisplay.shortHeadlinesMax, 'Responsive display asset count'),
+          diagRange('Description count', state.googleDisplay.descriptions.filter(Boolean).length, LIMITS.googleDisplay.descriptionsMin, LIMITS.googleDisplay.descriptionsMax, 'Responsive display asset count')
+        ];
+      } else if (state.channel === 'meta') {
+        items = [
+          diagField('Primary text', state.meta.primaryText, LIMITS.meta.primary, 'Recommended visibility threshold'),
+          diagField('Headline', state.meta.headline, LIMITS.meta.headline, 'Recommended visibility threshold'),
+          diagField('Description', state.meta.description, LIMITS.meta.description, 'Recommended visibility threshold'),
+          diagRange('Carousel cards', state.meta.cards.length, LIMITS.meta.cardsMin, LIMITS.meta.cardsMax, 'Meta carousel format')
+        ];
+      } else if (state.channel === 'linkedin') {
+        items = [
+          diagField('Intro text', state.linkedin.introText, LIMITS.linkedin.introRecommended, 'Practical visibility threshold'),
+          diagField('Headline', state.linkedin.headline, LIMITS.linkedin.headlineRecommended, 'Practical visibility threshold'),
+          diagField('Description', state.linkedin.description, LIMITS.linkedin.descriptionRecommended, 'Practical visibility threshold'),
+          diagRange('Carousel cards', state.linkedin.cards.length, LIMITS.linkedin.cardsMin, LIMITS.linkedin.cardsMax, 'Carousel preview range')
+        ];
+      } else {
+        items = [
+          diagField('Headline', state.youtube.headline, LIMITS.youtube.headline, 'Preview guardrail'),
+          diagField('Description line 1', state.youtube.description1, LIMITS.youtube.description, 'Preview guardrail'),
+          diagField('Description line 2', state.youtube.description2, LIMITS.youtube.description, 'Preview guardrail')
+        ];
+      }
+      d.innerHTML = items.map(item => `<div class="diag-row"><div><strong>${escapeHtml(item.label)}</strong><small>${escapeHtml(item.note)}</small></div><span class="counter ${item.over ? 'over' : ''}">${escapeHtml(item.badge)}</span></div>`).join('');
+    }
+
+    function renderNotes() {
+      const notes = document.querySelector('.notes');
+      if (!notes) return;
+      notes.innerHTML = `
+        <h3>Notes</h3>
+        <p>Google Search and Responsive Display now use stricter built-in validation for Google text lengths and asset counts.</p>
+        <p>Meta includes feed, carousel, Story and Reels previews, with safe-area overlays for vertical placements.</p>
+        <p>Responsive Display includes 10 layout examples so you can review the same assets in more realistic desktop and mobile contexts.</p>
+        <p>LinkedIn and YouTube counters are practical preview guardrails unless explicitly marked as Google validation.</p>`;
+    }
+
+    function render() {
+      renderTabs();
+      renderEditor();
+      renderPreviewTabs();
+      renderPreview();
+      renderDiagnostics();
+      renderNotes();
+      saveState();
+    }
+
+    e('loadExample').onclick = () => { state = normalizeState(EXAMPLES); render(); };
+    e('shuffle').onclick = () => { state.seed += 1; render(); };
+    e('resetAll').onclick = () => { state = normalizeState(EXAMPLES); render(); };
+    e('downloadJson').onclick = () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ad-preview-config.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+    e('copyLink').onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(location.href);
+        alert('Share link copied.');
+      } catch {
+        alert('Could not copy automatically. Copy the URL from your browser.');
+      }
+    };
+
+    render();
+  </script>
+
+</body>
+</html>
