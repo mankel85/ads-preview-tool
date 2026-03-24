@@ -1,0 +1,2312 @@
+
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reklaamieelvaate stuudio</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --line:#e5e7eb;
+      --text:#0f172a;
+      --muted:#64748b;
+      --brand:#111827;
+      --blue:#1a0dab;
+      --green:#0f9d58;
+      --danger:#b91c1c;
+      --warning:#92400e;
+      --good:#047857;
+      --soft:#f8fafc;
+      --soft2:#f1f5f9;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:1400px;margin:0 auto;padding:24px}
+    .hero,.panel{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:24px;
+      box-shadow:0 8px 24px rgba(15,23,42,.04);
+    }
+    .hero{padding:28px;margin-bottom:20px}
+    h1{margin:0;font-size:34px;line-height:1.1}
+    h2{margin:0 0 8px;font-size:20px}
+    h3{margin:0 0 8px;font-size:16px}
+    p{margin:0}
+    .muted{color:var(--muted)}
+    .top-actions,.tabs,.subtabs,.segmented,.toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .top-row{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap}
+    .pill{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+    }
+    .pill.active,.btn.primary{
+      background:var(--brand);
+      color:#fff;
+      border-color:var(--brand);
+    }
+    .btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      padding:10px 14px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+    }
+    .grid{display:grid;grid-template-columns:1.02fr .98fr;gap:20px}
+    @media (max-width: 1100px){.grid{grid-template-columns:1fr}}
+    .left,.right{display:flex;flex-direction:column;gap:18px}
+    .panel{padding:18px}
+    .field{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+    .field label{font-size:14px;font-weight:700}
+    .field small{font-size:12px;color:var(--muted);line-height:1.45}
+    input[type="text"], input[type="url"], textarea, select{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px 14px;
+      font:inherit;
+      color:var(--text);
+      background:#fff;
+    }
+    textarea{resize:vertical;min-height:88px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width: 680px){.row{grid-template-columns:1fr}}
+    .counter{
+      display:inline-flex;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      background:var(--soft2);
+      color:var(--muted);
+      margin-left:8px;
+    }
+    .counter.bad{background:#fee2e2;color:var(--danger)}
+    .counter.warn{background:#fef3c7;color:var(--warning)}
+    .list-item{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:12px;
+      margin-bottom:10px;
+      background:#fff;
+    }
+    .item-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      margin-bottom:8px;
+      flex-wrap:wrap;
+    }
+    .tiny{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .spec{
+      background:var(--soft);
+      border:1px dashed #cbd5e1;
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:12px;
+      color:#475569;
+      line-height:1.5;
+      margin-top:8px;
+    }
+    .diag{
+      display:grid;
+      gap:10px;
+    }
+    .diag-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:var(--soft);
+    }
+    .ok{color:var(--good);font-weight:700}
+    .badtxt{color:var(--danger);font-weight:700}
+    .preview-shell{
+      background:#f8fafc;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:16px;
+      min-height:540px;
+    }
+    .preview-note{
+      font-size:12px;color:var(--muted);margin-bottom:12px
+    }
+    .google-shell{
+      background:#fff;border:1px solid #e5e7eb;border-radius:24px;overflow:hidden
+    }
+    .g-top{
+      padding:10px 14px;border-bottom:1px solid #eef2f7;background:#fff
+    }
+    .g-searchbar{
+      display:flex;align-items:center;gap:10px;
+      border:1px solid #dbe4f0;border-radius:999px;padding:10px 14px
+    }
+    .g-searchbar .search-text{color:#111827;font-size:14px}
+    .g-tabs{display:flex;gap:18px;font-size:12px;color:#6b7280;margin-top:10px;overflow:auto;white-space:nowrap}
+    .g-tabs .active{color:#111827;font-weight:700;border-bottom:2px solid #1a73e8;padding-bottom:8px}
+    .g-result{padding:20px}
+    .g-line{display:flex;gap:12px;align-items:flex-start}
+    .g-fav{
+      width:28px;height:28px;border-radius:999px;background:#e2e8f0;color:#334155;
+      display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex:0 0 auto
+    }
+    .g-domain{font-size:14px;color:#111827}
+    .g-sponsored{font-size:12px;color:#5f6368;margin-top:2px}
+    .g-title{font-size:22px;line-height:1.35;color:var(--blue);margin-top:8px}
+    .g-desc{font-size:14px;line-height:1.6;color:#4b5563;margin-top:8px}
+    .g-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .g-badges span{background:#f1f5f9;border-radius:999px;padding:6px 10px;font-size:12px;color:#475569}
+    .g-sitelinks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    @media (max-width: 640px){.g-sitelinks{grid-template-columns:1fr}}
+    .g-sitelinks div{background:#f8fafc;border-radius:16px;padding:12px}
+    .g-sitelinks strong{color:var(--blue);display:block;margin-bottom:4px}
+    .mobile-frame{max-width:390px;margin:0 auto}
+    .display-card,.social-card,.linkedin-card,.yt-card{
+      background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden
+    }
+    .img{width:100%;display:block;object-fit:cover;background:#e5e7eb}
+    .square{aspect-ratio:1/1}
+    .landscape{aspect-ratio:1.91/1}
+    .portrait{aspect-ratio:9/16}
+    .display-body,.card-body{padding:16px}
+    .label{
+      display:inline-block;background:var(--soft2);color:#475569;font-size:11px;font-weight:700;
+      padding:5px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px
+    }
+    .cta{
+      display:inline-flex;align-items:center;justify-content:center;border-radius:999px;
+      padding:10px 14px;border:1px solid var(--line);font-weight:700;font-size:14px;background:#fff
+    }
+    .cta.dark{background:var(--brand);border-color:var(--brand);color:#fff}
+    .meta-head{
+      display:flex;gap:10px;align-items:center;padding:14px 16px
+    }
+    .avatar{width:40px;height:40px;border-radius:999px;background:#cbd5e1;object-fit:cover}
+    .social-linkbox{
+      display:flex;justify-content:space-between;gap:14px;padding:14px 16px;background:#f8fafc;border-top:1px solid #eef2f7
+    }
+    .story-frame{
+      width:320px;max-width:100%;margin:0 auto;border-radius:32px;overflow:hidden;border:1px solid #334155;background:#000;position:relative
+    }
+    .safe-top,.safe-bottom{
+      position:absolute;left:0;right:0;border:2px dashed rgba(255,255,255,.75);pointer-events:none;z-index:3
+    }
+    .safe-top{top:0;height:14%}
+    .safe-bottom{bottom:0;height:20%}
+    .safe-label{
+      position:absolute;right:10px;background:rgba(15,23,42,.72);color:#fff;font-size:11px;padding:5px 8px;border-radius:999px;z-index:4
+    }
+    .safe-label.top{top:8px}
+    .safe-label.bottom{bottom:8px}
+    .carousel-track{
+      display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,1fr);gap:12px;overflow:auto;padding-bottom:4px
+    }
+    .carousel-card{
+      min-width:220px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff
+    }
+    .carousel-card .card-body{padding:12px}
+    .chip{
+      display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700;background:#eef2ff;color:#4338ca
+    }
+    .toolbar-note{font-size:12px;color:var(--muted);margin-left:auto}
+    .hidden{display:none}
+    .thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#e5e7eb}
+    .yt-meta{display:flex;gap:12px;padding:14px 16px}
+    .yt-avatar{width:36px;height:36px;border-radius:999px;background:#cbd5e1}
+    .kpi{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:10px
+    }
+    .kpi span{
+      background:#f8fafc;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:12px
+    }
+    .footer-note{font-size:12px;color:var(--muted);line-height:1.5}
+    .minihead{font-size:13px;color:#111827;font-weight:700;margin:0 0 6px}
+
+    .workspace-grid{display:grid;gap:12px}
+    .workspace-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .saved-list{display:grid;gap:10px}
+    .saved-card{border:1px solid var(--line);border-radius:18px;padding:12px;background:#fff}
+    .saved-card.active{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand) inset}
+    .saved-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .saved-meta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+    .saved-card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .saved-empty{padding:16px;border:1px dashed #cbd5e1;border-radius:18px;background:var(--soft);color:var(--muted);font-size:13px;line-height:1.6}
+    .workspace-hint{font-size:12px;color:var(--muted);line-height:1.5}
+    .export-result{display:none;margin-top:10px;padding:12px;border:1px dashed #cbd5e1;border-radius:16px;background:var(--soft)}
+    .export-result.active{display:block}
+    .export-result a{font-weight:700;text-decoration:none;color:var(--brand)}
+    .export-result small{display:block;margin-top:6px;color:var(--muted);line-height:1.5}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="top-row">
+        <div>
+          <div class="label">Reklaamieelvaate stuudio</div>
+          <h1>Testitav reklaamieelvaate tööriist</h1>
+          <p class="muted" style="margin-top:12px;max-width:900px;line-height:1.6">
+            Loo ja kontrolli reklaamitekste Google’i, Meta/Instagrami, LinkedIni ja YouTube’i jaoks.
+            Tööriist on mõeldud kliendiaruteludeks, sisemiseks ülevaatuseks ja loovmaterjalide kvaliteedikontrolliks.
+          </p>
+        </div>
+        <div class="top-actions">
+          <button class="btn" id="btnExample">Lae näidisandmed</button>
+          <button class="btn" id="btnShuffle">Vaheta kombinatsiooni</button>
+                              <button class="btn" id="btnClearForm">Tühjenda väljad</button>
+          <button class="btn primary" id="btnReset">Lähtesta</button>
+        </div>
+      </div>
+      <div class="tabs" id="mainTabs" style="margin-top:18px"></div>
+    </section>
+
+    <div class="grid">
+      <div class="left">
+
+        <section class="panel">
+          <h2>Tööfaili reklaamid</h2>
+          <p class="muted" style="margin-bottom:16px">Lisa mitu reklaami samasse tööfaili, ava need uuesti muutmiseks ja ekspordi kogu komplekt CSV või XLSX kujul.</p>
+          <div class="workspace-grid">
+            <div class="row">
+              <div class="field" style="margin-bottom:0">
+                <label for="draftNameInput">Praeguse mustandi nimi</label>
+                <input type="text" id="draftNameInput" placeholder="Nt Kevadkampaania – Meta feed" oninput="syncDraftName(this.value)" />
+                <small>Salvestamisel kasutatakse seda nime tööfailis ja ekspordis.</small>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label for="draftGroupInput">Reklaamirühm</label>
+                <input type="text" id="draftGroupInput" list="adGroupSuggestions" placeholder="Nt Reklaamirühm 1" oninput="syncDraftGroup(this.value)" />
+                <datalist id="adGroupSuggestions"></datalist>
+                <small>Sisesta sama rühmanimi mitmele reklaamile, kui soovid need ekspordis kokku grupeerida.</small>
+              </div>
+            </div>
+            <div class="workspace-actions">
+              <button class="btn primary" id="btnSaveDraft">Salvesta reklaam</button>
+              <button class="btn" id="btnSaveCopy">Salvesta koopiana</button>
+              <button class="btn" id="btnNewDraft">+ Uus reklaam</button>
+              <button class="btn" id="btnClearDraft">Tühjenda väljad</button>
+              <button class="btn" id="btnExportCsv">Laadi alla CSV</button>
+              <button class="btn" id="btnExportXlsx">Laadi alla XLSX</button>
+            </div>
+            <div class="workspace-hint" id="workspaceStatus"></div>
+            <div id="exportResult" class="export-result"></div>
+            <div id="savedAdsList" class="saved-list"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2 id="formTitle">Sisendid</h2>
+          <p class="muted" id="formSubtitle" style="margin-bottom:16px">Muuda välju vasakul ja eelvaade uueneb kohe.</p>
+          <div id="formArea"></div>
+        </section>
+      </div>
+
+      <div class="right">
+        <section class="panel">
+          <div class="top-row" style="margin-bottom:10px">
+            <div>
+              <h2>Eelvaade</h2>
+              <p class="muted">Välimus on elutruu, kuid platvormid võivad lõppkuva dünaamiliselt muuta.</p>
+            </div>
+            <div class="toolbar" id="previewToolbar"></div>
+          </div>
+          <div class="preview-shell">
+            <div class="preview-note" id="previewNote"></div>
+            <div id="previewArea"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Kontrollid</h2>
+          <p class="muted" style="margin-bottom:14px">Siin näed kiirelt, kas tekstid jäävad soovituslike piirangute sisse.</p>
+          <div id="diagnostics" class="diag"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Märkused</h2>
+          <div class="footer-note" id="notesArea"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PLACEHOLDER_IMG = "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80";
+    const PLACEHOLDER_SQUARE = "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80";
+    const PLACEHOLDER_LOGO = "https://dummyimage.com/300x300/111827/ffffff.png&text=Logo";
+
+    const TAB_META = [
+      { key: "googleSearch", label: "Google otsing" },
+      { key: "googleDisplay", label: "Google Responsive Display" },
+      { key: "meta", label: "Meta / Instagram" },
+      { key: "linkedin", label: "LinkedIn" },
+      { key: "youtube", label: "YouTube video" }
+    ];
+
+    const exampleState = {
+      activeTab: "googleSearch",
+      seed: 0,
+      googleSearchView: "desktop",
+      googleDisplayView: "D1",
+      googleSearch: {
+        finalUrl: "https://www.example.com/jooksujalatsid",
+        paths: ["jooks", "allahindlus"],
+        headlines: [
+          { text: "Osta jooksujalatseid veebist", pin: "H1" },
+          { text: "Tasuta tarne alates 50 eurost", pin: "" },
+          { text: "Meeste, naiste ja laste suurused", pin: "" },
+          { text: "Tuntud brändid heade hindadega", pin: "" },
+          { text: "30-päevane tagastusõigus", pin: "H3" }
+        ],
+        descriptions: [
+          { text: "Leia maantee-, traili- ja jõusaalijalanõud ühes kohas. Kiire tarne ja lihtne tagastus.", pin: "D1" },
+          { text: "Võrdle pehmendust, toestust ja sobivust. Sobiva paari leidmine on lihtsam kui kunagi varem.", pin: "" }
+        ],
+        callouts: ["Tasuta tarne", "30-päevane tagastus", "Tuntud brändid", "Poele järele"],
+        sitelinks: ["Meeste jooksujalatsid", "Naiste jooksujalatsid", "Trail-jalatsid", "Outlet"]
+      },
+      googleDisplay: {
+        finalUrl: "https://www.example.com/uus-kollektsioon",
+        businessName: "Näide Sport",
+        longHeadline: "Avasta kerged jooksujalanõud ja spordiriided, mis toetavad sind igal treeningul.",
+        shortHeadlines: [
+          "Uue hooaja jooksuvarustus",
+          "Treeni targemalt iga päev",
+          "Jalatsid ja rõivad ühes kohas",
+          "Värsked tooted veebis",
+          "Liigu mugavamalt"
+        ],
+        descriptions: [
+          "Avasta bestsellereid ja hooaja uusi mudeleid. Kiire tarne ja lihtne tagastus.",
+          "Leia treeninguks ja võistluseks sobiv varustus ühest kohast.",
+          "Kvaliteetsed brändid ja igapäevased valikud igale tasemele."
+        ],
+        cta: "Osta kohe",
+        landscapeImage: PLACEHOLDER_IMG,
+        squareImage: PLACEHOLDER_SQUARE,
+        portraitImage: PLACEHOLDER_IMG,
+        logoImage: PLACEHOLDER_LOGO
+      },
+      meta: {
+        placement: "facebook",
+        brand: "Näide Sport",
+        pageName: "Näide Sport",
+        primaryText: "Tutvu meie uute igapäevaste treeningjalatsitega. Kerge pehmendus, hingav pealisosa ja kiire tarne üle Baltikumi.",
+        headline: "Sinu järgmine jooks algab siit",
+        description: "Tasuta tarne alates 50 €",
+        cta: "Osta kohe",
+        finalUrl: "https://www.example.com/treeningjalatsid",
+        image: PLACEHOLDER_SQUARE,
+        portraitImage: PLACEHOLDER_IMG,
+        carouselCards: [
+          { headline: "Jooksujalatsid", description: "Kerged ja mugavad", url: "https://www.example.com/jooks", image: PLACEHOLDER_SQUARE },
+          { headline: "Treeningriided", description: "Hingavad materjalid", url: "https://www.example.com/riided", image: PLACEHOLDER_SQUARE },
+          { headline: "Aksessuaarid", description: "Täienda komplekti", url: "https://www.example.com/aksessuaarid", image: PLACEHOLDER_SQUARE }
+        ]
+      },
+      linkedin: {
+        format: "single",
+        company: "Nobel Digital",
+        introText: "Kontrolli reklaamitekste enne kampaania käivitamist ja jaga elutruud eelvaateid oma tiimi või kliendiga.",
+        headline: "Reklaamieelvaate tööriist meeskondadele",
+        description: "Vaata loovmaterjal üle enne avaldamist.",
+        cta: "Loe lähemalt",
+        finalUrl: "https://www.example.com/b2b-eelvaade",
+        image: PLACEHOLDER_IMG,
+        logo: PLACEHOLDER_LOGO,
+        carouselCards: [
+          { headline: "Google eelvaated", description: "Otsing ja display", url: "https://www.example.com/google", image: PLACEHOLDER_SQUARE },
+          { headline: "Meta eelvaated", description: "Feed, story, reels", url: "https://www.example.com/meta", image: PLACEHOLDER_SQUARE },
+          { headline: "Jagatavad lingid", description: "Saada kliendile", url: "https://www.example.com/share", image: PLACEHOLDER_SQUARE }
+        ]
+      },
+      youtube: {
+        placement: "infeed",
+        channel: "Näide Sport",
+        videoUrl: "https://www.youtube.com/watch?v=example",
+        thumbnail: PLACEHOLDER_IMG,
+        title: "Uued jooksujalatsid igaks treeninguks",
+        desc1: "Kerged, hingavad ja valmis igaks jooksuks.",
+        desc2: "Vaata valikut ja telli veebist.",
+        cta: "Vaata nüüd",
+        badge: "Reklaam"
+      }
+    };
+
+    let state = clone(exampleState);
+
+    const WORKSPACE_KEY = 'adPreviewStudioWorkspaceV2';
+    const PREVIOUS_WORKSPACE_KEY = 'adPreviewStudioWorkspaceV1';
+    const CURRENT_STATE_KEY = 'adPreviewStudioCurrentStateV1';
+    let workspace = { items: [], activeId: null, draftName: '', draftGroup: '' };
+
+    function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
+    function hasText(value){ return String(value == null ? '' : value).trim() !== ''; }
+    function safeDomain(url){
+      try{ return new URL(url).hostname.replace(/^www\./,''); } catch(e){ return 'sinudomeen.ee'; }
+    }
+    function toLengthGoogle(str){
+      let n = 0;
+      for (const ch of (str || '')) {
+        n += ch.charCodeAt(0) > 255 ? 2 : 1;
+      }
+      return n;
+    }
+    function counterHtml(text, limit, google=false){
+      const len = google ? toLengthGoogle(text||'') : ((text||'').length);
+      const diff = limit - len;
+      let cls = 'counter';
+      if (diff < 0) cls += ' bad';
+      else if (diff <= 5) cls += ' warn';
+      return `<span class="${cls}">${len}/${limit}</span>`;
+    }
+    function esc(str){
+      return (str || '')
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;');
+    }
+    function persistCurrentState(){
+      try{
+        localStorage.setItem(CURRENT_STATE_KEY, JSON.stringify(state));
+      }catch(e){}
+    }
+    function loadCurrentState(){
+      try{
+        const raw = localStorage.getItem(CURRENT_STATE_KEY);
+        if(!raw) return;
+        const parsed = JSON.parse(raw);
+        state = Object.assign(clone(exampleState), parsed);
+      }catch(e){}
+    }
+    function cleanUrl(){
+      try{
+        const url = new URL(location.href);
+        if(url.searchParams.has('config')){
+          history.replaceState({}, '', url.pathname + url.hash);
+        }
+      }catch(e){}
+    }
+
+    function renderTabs(){
+      const el = document.getElementById('mainTabs');
+      el.innerHTML = TAB_META.map(tab => `
+        <button class="pill ${state.activeTab === tab.key ? 'active':''}" onclick="setTab('${tab.key}')">${tab.label}</button>
+      `).join('');
+    }
+
+    function setTab(key){
+      state.activeTab = key;
+      const activeItem = workspace.items.find(item => item.id === workspace.activeId);
+      if(!activeItem || activeItem.type !== key){
+        workspace.activeId = null;
+        if(!workspace.draftName || workspace.draftName.trim() === '') workspace.draftName = defaultDraftName(key);
+      }
+      persistWorkspace();
+      render();
+    }
+
+    function makeInput(label, value, oninput, opts={}){
+      const type = opts.type || 'text';
+      const hint = opts.hint || '';
+      const extra = opts.extra || '';
+      return `
+        <div class="field">
+          <label>${label}${opts.limit ? counterHtml(value, opts.limit, !!opts.google) : ''}</label>
+          <input type="${type}" value="${esc(value)}" oninput="${oninput}(this.value)" placeholder="${esc(opts.placeholder || '')}" />
+          ${hint ? `<small>${hint}</small>`:''}
+          ${extra}
+        </div>
+      `;
+    }
+    function makeTextarea(label, value, oninput, opts={}){
+      const hint = opts.hint || '';
+      const extra = opts.extra || '';
+      return `
+        <div class="field">
+          <label>${label}${opts.limit ? counterHtml(value, opts.limit, !!opts.google) : ''}</label>
+          <textarea oninput="${oninput}(this.value)" placeholder="${esc(opts.placeholder || '')}">${esc(value)}</textarea>
+          ${hint ? `<small>${hint}</small>`:''}
+          ${extra}
+        </div>
+      `;
+    }
+    function makeSelect(label, value, options, oninput, hint=''){
+      return `
+        <div class="field">
+          <label>${label}</label>
+          <select onchange="${oninput}(this.value)">
+            ${options.map(o => `<option value="${esc(o.value)}" ${o.value===value?'selected':''}>${esc(o.label)}</option>`).join('')}
+          </select>
+          ${hint ? `<small>${hint}</small>`:''}
+        </div>
+      `;
+    }
+    function imageField(label, value, setFnName, specText){
+      return `
+        <div class="field">
+          <label>${label}</label>
+          <input type="url" value="${esc(value)}" oninput="${setFnName}(this.value)" placeholder="Sisesta pildi URL" />
+          <input type="file" accept="image/*" onchange="${setFnName}File(this.files[0])" />
+          <div class="spec">${specText}</div>
+        </div>
+      `;
+    }
+    function makeCtaField(label, value, oninput, suggestions, hint=''){
+      return `
+        <div class="field">
+          <label>${label}</label>
+          <input type="text" value="${esc(value)}" oninput="${oninput}(this.value)" placeholder="Sisesta CTA tekst" />
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            ${suggestions.map(s=>`<button type="button" class="btn" onclick="${oninput}('${esc(s).replace(/'/g, "&#39;")}')">${esc(s)}</button>`).join('')}
+          </div>
+          ${hint ? `<small>${hint}</small>` : ''}
+        </div>
+      `;
+    }
+
+    function renderMetaFeedMedia(src){
+      return `<img src="${esc(src)}" style="width:100%;height:auto;display:block;background:#e5e7eb">`;
+    }
+
+    function renderGoogleSearchForm(){
+      const g = state.googleSearch;
+      document.getElementById('formTitle').innerText = 'Google otsingureklaami sisendid';
+      document.getElementById('formSubtitle').innerText = 'RSA loogika, pin-juhtimine ja Google’i tähemärgipiirangute kontroll.';
+      let html = '';
+      html += makeInput('Lõpp-URL', g.finalUrl, 'setGoogleSearchUrl', {type:'url', placeholder:'https://www.sinuveeb.ee'});
+      html += `<div class="row">` +
+        makeInput('Path 1', g.paths[0], 'setGooglePath1', {limit:15, google:true, placeholder:'kategooria'}) +
+        makeInput('Path 2', g.paths[1], 'setGooglePath2', {limit:15, google:true, placeholder:'pakkumine'}) +
+      `</div>`;
+      html += `<div class="panel" style="padding:14px;margin-bottom:14px;background:#f8fafc">
+        <h3>Pealkirjad</h3>
+        <p class="muted" style="margin-bottom:12px">Kuni 15 pealkirja, igaüks kuni 30 tähemärki. Vajadusel saad pealkirja kinnitada positsioonile 1, 2 või 3.</p>`;
+      g.headlines.forEach((item, i) => {
+        html += `<div class="list-item">
+          <div class="item-top">
+            <span class="tiny">Pealkiri ${i+1}</span>
+            <div>
+              ${counterHtml(item.text, 30, true)}
+              <button class="btn" type="button" onclick="removeGoogleHeadline(${i})">Eemalda</button>
+            </div>
+          </div>
+          <div class="row">
+            <input type="text" value="${esc(item.text)}" oninput="setGoogleHeadline(${i}, this.value)" placeholder="Sisesta pealkiri" />
+            <select onchange="setGoogleHeadlinePin(${i}, this.value)">
+              ${['','H1','H2','H3'].map(v=>`<option value="${v}" ${item.pin===v?'selected':''}>${v ? 'Kinnita ' + v.replace('H','pealkirja positsioonile ') : 'Ilma kinnitamiseta'}</option>`).join('')}
+            </select>
+          </div>
+        </div>`;
+      });
+      html += `<button class="btn" type="button" onclick="addGoogleHeadline()">Lisa pealkiri</button></div>`;
+
+      html += `<div class="panel" style="padding:14px;background:#f8fafc">
+        <h3>Kirjeldused</h3>
+        <p class="muted" style="margin-bottom:12px">Kuni 4 kirjeldust, igaüks kuni 90 tähemärki. Vajadusel saad kirjelduse kinnitada positsioonile 1 või 2.</p>`;
+      g.descriptions.forEach((item, i) => {
+        html += `<div class="list-item">
+          <div class="item-top">
+            <span class="tiny">Kirjeldus ${i+1}</span>
+            <div>
+              ${counterHtml(item.text, 90, true)}
+              <button class="btn" type="button" onclick="removeGoogleDescription(${i})">Eemalda</button>
+            </div>
+          </div>
+          <div class="row">
+            <textarea oninput="setGoogleDescription(${i}, this.value)" placeholder="Sisesta kirjeldus">${esc(item.text)}</textarea>
+            <select onchange="setGoogleDescriptionPin(${i}, this.value)">
+              ${['','D1','D2'].map(v=>`<option value="${v}" ${item.pin===v?'selected':''}>${v ? 'Kinnita ' + v.replace('D','kirjelduse positsioonile ') : 'Ilma kinnitamiseta'}</option>`).join('')}
+            </select>
+          </div>
+        </div>`;
+      });
+      html += `<button class="btn" type="button" onclick="addGoogleDescription()">Lisa kirjeldus</button></div>`;
+
+      html += `<div class="panel" style="padding:14px;margin-top:14px;background:#f8fafc">
+        <h3>Lisavarad</h3>
+        <p class="muted" style="margin-bottom:12px">Need plokid on mõeldud kiireks kliendieelvaateks.</p>
+        <div class="row">
+          <div>
+            <div class="minihead">Callout’id</div>
+            ${renderSimpleList(g.callouts, 'setGoogleCallout', 'addGoogleCallout', 'removeGoogleCallout', 'Näiteks: Tasuta tarne')}
+          </div>
+          <div>
+            <div class="minihead">Sitelink’id</div>
+            ${renderSimpleList(g.sitelinks, 'setGoogleSitelink', 'addGoogleSitelink', 'removeGoogleSitelink', 'Näiteks: Naiste jalatsid')}
+          </div>
+        </div>
+      </div>`;
+      return html;
+    }
+
+    function renderSimpleList(items, setFn, addFn, removeFn, ph){
+      return items.map((item, i)=>`
+        <div class="list-item" style="padding:10px;margin-bottom:8px">
+          <div class="row">
+            <input type="text" value="${esc(item)}" oninput="${setFn}(${i}, this.value)" placeholder="${esc(ph)}" />
+            <button class="btn" type="button" onclick="${removeFn}(${i})">Eemalda</button>
+          </div>
+        </div>
+      `).join('') + `<button class="btn" type="button" onclick="${addFn}()">Lisa</button>`;
+    }
+
+    function renderGoogleDisplayForm(){
+      const d = state.googleDisplay;
+      document.getElementById('formTitle').innerText = 'Google Responsive Display sisendid';
+      document.getElementById('formSubtitle').innerText = 'Tekstivarad ja pildid, mida Google kombineerib erinevateks paigutusteks.';
+      let html = '';
+      html += makeInput('Lõpp-URL', d.finalUrl, 'setDisplayUrl', {type:'url', placeholder:'https://www.sinuveeb.ee'});
+      html += makeInput('Brändi nimi', d.businessName, 'setDisplayBusinessName', {limit:25, placeholder:'Sinu bränd'});
+      html += makeInput('Pikk pealkiri', d.longHeadline, 'setDisplayLongHeadline', {limit:90, placeholder:'Pikk pealkiri'});
+      html += makeCtaField('CTA / nupu tekst', d.cta, 'setDisplayCta', ['Automaatne','Osta kohe','Loe lähemalt','Registreeru','Vaata rohkem'], 'Google Adsis on CTA enamasti valikupõhine. Selles eelvaates saad valida soovituse või sisestada testiks oma teksti.');
+      html += `<div class="panel" style="padding:14px;margin-bottom:14px;background:#f8fafc">
+        <h3>Lühikesed pealkirjad</h3>
+        <p class="muted" style="margin-bottom:12px">Kuni 5 pealkirja, igaüks kuni 30 tähemärki.</p>
+        ${d.shortHeadlines.map((item, i)=>`
+          <div class="list-item">
+            <div class="item-top">
+              <span class="tiny">Lühike pealkiri ${i+1}</span>
+              <div>${counterHtml(item,30)} <button class="btn" onclick="removeDisplayHeadline(${i})">Eemalda</button></div>
+            </div>
+            <input type="text" value="${esc(item)}" oninput="setDisplayHeadline(${i}, this.value)" placeholder="Sisesta pealkiri" />
+          </div>
+        `).join('')}
+        <button class="btn" onclick="addDisplayHeadline()">Lisa pealkiri</button>
+      </div>`;
+      html += `<div class="panel" style="padding:14px;background:#f8fafc">
+        <h3>Kirjeldused</h3>
+        <p class="muted" style="margin-bottom:12px">Kuni 5 kirjeldust, igaüks kuni 90 tähemärki.</p>
+        ${d.descriptions.map((item, i)=>`
+          <div class="list-item">
+            <div class="item-top">
+              <span class="tiny">Kirjeldus ${i+1}</span>
+              <div>${counterHtml(item,90)} <button class="btn" onclick="removeDisplayDescription(${i})">Eemalda</button></div>
+            </div>
+            <textarea oninput="setDisplayDescription(${i}, this.value)" placeholder="Sisesta kirjeldus">${esc(item)}</textarea>
+          </div>
+        `).join('')}
+        <button class="btn" onclick="addDisplayDescription()">Lisa kirjeldus</button>
+      </div>`;
+      html += `<div class="panel" style="padding:14px;margin-top:14px;background:#f8fafc">
+        <h3>Pildid ja logo</h3>
+        ${imageField('Maastikupilt (1.91:1)', d.landscapeImage, 'setDisplayLandscapeImage', 'Soovituslik 1200×628, minimaalne 600×314, JPG või PNG, kuni 5120 KB.')}
+        ${imageField('Ruudukujuline pilt (1:1)', d.squareImage, 'setDisplaySquareImage', 'Soovituslik 1200×1200, minimaalne 300×300, JPG või PNG, kuni 5120 KB.')}
+        ${imageField('Vertikaalne pilt (9:16)', d.portraitImage || '', 'setDisplayPortraitImage', 'Soovituslik 1080×1920, JPG või PNG. Kasutatakse eeskätt mobiili interstitial- ja vertikaalsetes eelvaadetes, et 1:1 ja 9:16 ei läheks segamini.')}
+        ${imageField('Logo', d.logoImage, 'setDisplayLogoImage', 'Soovituslik ruutlogo, minimaalne 128×128, JPG või PNG, kuni 5120 KB.')}
+      </div>`;
+      return html;
+    }
+
+    function renderMetaForm(){
+      const m = state.meta;
+      document.getElementById('formTitle').innerText = 'Meta / Instagram sisendid';
+      document.getElementById('formSubtitle').innerText = 'Facebook feed, Instagram feed, story, reels ja karussell samas tööriistas.';
+      let html = '';
+      html += makeSelect('Paigutus', m.placement, [
+        {value:'facebook',label:'Facebook Feed'},
+        {value:'instagram',label:'Instagram Feed'},
+        {value:'story',label:'Story'},
+        {value:'reels',label:'Reels'},
+        {value:'carousel',label:'Karussell'}
+      ], 'setMetaPlacement');
+      html += makeInput('Bränd', m.brand, 'setMetaBrand', {placeholder:'Sinu bränd'});
+      html += makeInput('Lehe / profiili nimi', m.pageName, 'setMetaPageName', {placeholder:'Lehe nimi'});
+      html += makeInput('Lõpp-URL', m.finalUrl, 'setMetaUrl', {type:'url', placeholder:'https://www.sinuveeb.ee'});
+      html += makeTextarea('Põhitekst', m.primaryText, 'setMetaPrimaryText', {limit:125, placeholder:'Sisesta põhitekst'});
+      html += `<div class="row">` +
+        makeInput('Pealkiri', m.headline, 'setMetaHeadline', {limit:40, placeholder:'Pealkiri'}) +
+        makeInput('Kirjeldus', m.description, 'setMetaDescription', {limit:25, placeholder:'Kirjeldus'}) +
+      `</div>`;
+      html += makeCtaField('CTA / nupu tekst', m.cta, 'setMetaCta', ['Osta kohe','Loe lähemalt','Saada sõnum','Registreeru','Vaata rohkem'], 'Meta Ads Manageris on CTA tavaliselt valikupõhine. Selles eelvaates saad kiireks testiks kasutada soovitust või kirjutada oma teksti.');
+      if(m.placement !== 'carousel'){
+        html += imageField('Feedi põhipilt', m.image, 'setMetaImage', 
+          'Facebook Feed ja Instagram Feed toetavad samu kuvasuhtegruppe. Soovituslik pilt on 1080×1080 (1:1); lubatud ja levinud on ka 1.91:1. Formaat: JPG või PNG.');
+        html += imageField('Vertikaalne pilt (9:16) story / reels', m.portraitImage || '', 'setMetaPortraitImage', 
+          'Soovituslik 1080×1920, JPG või PNG. Seda kasutatakse Story ja Reels eelvaadetes, et vertikaalse placementi tulemus oleks elutruum.');
+      }
+      if(m.placement === 'carousel'){
+        html += `<div class="panel" style="padding:14px;margin-top:14px;background:#f8fafc">
+          <h3>Karussellikaardid</h3>
+          <p class="muted" style="margin-bottom:12px">Karusselli puhul kasutatakse ainult kaartide pilte. Üldised põhi- ja vertikaalpildi väljad on siin peidetud, et vormingud ei läheks segamini.</p>
+          ${m.carouselCards.map((card, i)=>renderMetaCardEditor(card, i)).join('')}
+          <button class="btn" onclick="addMetaCard()">Lisa kaart</button>
+        </div>`;
+      }
+      return html;
+    }
+
+    function renderMetaCardEditor(card, i){
+      return `
+        <div class="list-item">
+          <div class="item-top">
+            <span class="tiny">Kaart ${i+1}</span>
+            <button class="btn" onclick="removeMetaCard(${i})">Eemalda</button>
+          </div>
+          <div class="row">
+            <input type="text" value="${esc(card.headline)}" oninput="setMetaCardHeadline(${i}, this.value)" placeholder="Kaardi pealkiri" />
+            <input type="text" value="${esc(card.description)}" oninput="setMetaCardDescription(${i}, this.value)" placeholder="Kaardi kirjeldus" />
+          </div>
+          <div class="row">
+            <input type="url" value="${esc(card.url)}" oninput="setMetaCardUrl(${i}, this.value)" placeholder="Kaardi link" />
+            <input type="url" value="${esc(card.image)}" oninput="setMetaCardImage(${i}, this.value)" placeholder="Kaardi pildi URL" />
+          </div>
+          <input type="file" accept="image/*" onchange="setMetaCardImageFile(${i}, this.files[0])" />
+        </div>
+      `;
+    }
+
+    function renderLinkedInForm(){
+      const l = state.linkedin;
+      document.getElementById('formTitle').innerText = 'LinkedIni sisendid';
+      document.getElementById('formSubtitle').innerText = 'Üksikpilt või karussell. Tekstipikkused on siin praktilised nähtavuse soovitused.';
+      let html = '';
+      html += makeSelect('Formaat', l.format, [
+        {value:'single',label:'Üksikpilt'},
+        {value:'carousel',label:'Karussell'}
+      ], 'setLinkedinFormat');
+      html += makeInput('Ettevõtte nimi', l.company, 'setLinkedinCompany', {placeholder:'Ettevõtte nimi'});
+      html += makeInput('Lõpp-URL', l.finalUrl, 'setLinkedinUrl', {type:'url', placeholder:'https://www.sinuveeb.ee'});
+      html += makeTextarea('Sissejuhatav tekst', l.introText, 'setLinkedinIntroText', {limit:150, placeholder:'Sisesta sissejuhatav tekst'});
+      html += `<div class="row">` +
+        makeInput('Pealkiri', l.headline, 'setLinkedinHeadline', {limit:70, placeholder:'Pealkiri'}) +
+        makeInput('Kirjeldus', l.description, 'setLinkedinDescription', {limit:70, placeholder:'Kirjeldus'}) +
+      `</div>`;
+      html += makeCtaField('CTA / nupu tekst', l.cta, 'setLinkedinCta', ['Loe lähemalt','Registreeru','Laadi alla','Vaata demo','Külasta saiti'], 'LinkedIni Campaign Manageris kasutatakse CTA puhul üldjuhul etteantud valikuid. Selles eelvaates saad vajadusel sisestada ka kohandatud teksti.');
+      if(l.format !== 'carousel'){
+        html += imageField('Põhipilt', l.image, 'setLinkedinImage', 'Soovituslik 1200×627, JPG või PNG.');
+      }
+      html += imageField('Logo', l.logo, 'setLinkedinLogo', 'Soovituslik ruutlogo, JPG või PNG.');
+      if(l.format === 'carousel'){
+        html += `<div class="panel" style="padding:14px;margin-top:14px;background:#f8fafc">
+          <h3>Karussellikaardid</h3>
+          <p class="muted" style="margin-bottom:12px">Karussellis kasutatakse ainult kaartide pilte. Üldine põhipildi väli on siin peidetud, et vormingud ei läheks segamini.</p>
+          ${l.carouselCards.map((card, i)=>renderLinkedinCardEditor(card, i)).join('')}
+          <button class="btn" onclick="addLinkedinCard()">Lisa kaart</button>
+        </div>`;
+      }
+      return html;
+    }
+
+    function renderLinkedinCardEditor(card, i){
+      return `
+        <div class="list-item">
+          <div class="item-top">
+            <span class="tiny">Kaart ${i+1}</span>
+            <button class="btn" onclick="removeLinkedinCard(${i})">Eemalda</button>
+          </div>
+          <div class="row">
+            <input type="text" value="${esc(card.headline)}" oninput="setLinkedinCardHeadline(${i}, this.value)" placeholder="Kaardi pealkiri" />
+            <input type="text" value="${esc(card.description)}" oninput="setLinkedinCardDescription(${i}, this.value)" placeholder="Kaardi kirjeldus" />
+          </div>
+          <div class="row">
+            <input type="url" value="${esc(card.url)}" oninput="setLinkedinCardUrl(${i}, this.value)" placeholder="Kaardi link" />
+            <input type="url" value="${esc(card.image)}" oninput="setLinkedinCardImage(${i}, this.value)" placeholder="Kaardi pildi URL" />
+          </div>
+          <input type="file" accept="image/*" onchange="setLinkedinCardImageFile(${i}, this.files[0])" />
+        </div>
+      `;
+    }
+
+    function renderYoutubeForm(){
+      const y = state.youtube;
+      document.getElementById('formTitle').innerText = 'YouTube videoreklaami sisendid';
+      document.getElementById('formSubtitle').innerText = 'Fookus on videoreklaami tekstidel: pealkiri, kaks kirjeldusrida ja nende paigutus eelvaates.';
+      let html = '';
+      html += makeSelect('Paigutus', y.placement, [
+        {value:'infeed',label:'In-feed video'},
+        {value:'watchnext',label:'Watch next'},
+        {value:'shorts',label:'Shorts'}
+      ], 'setYoutubePlacement', 'Tekstide asetus võib paigutuse lõikes erineda.');
+      html += makeInput('Kanali nimi', y.channel, 'setYoutubeChannel', {placeholder:'Kanali nimi'});
+      html += makeInput('Video URL', y.videoUrl, 'setYoutubeVideoUrl', {type:'url', placeholder:'https://www.youtube.com/watch?v=...'});
+      html += makeInput('Pealkiri', y.title, 'setYoutubeTitle', {limit:100, placeholder:'Video pealkiri'});
+      html += `<div class="row">` +
+        makeInput('Kirjeldusrida 1', y.desc1, 'setYoutubeDesc1', {limit:35, placeholder:'Esimene kirjeldusrida'}) +
+        makeInput('Kirjeldusrida 2', y.desc2, 'setYoutubeDesc2', {limit:35, placeholder:'Teine kirjeldusrida'}) +
+      `</div>`;
+      html += makeInput('CTA', y.cta, 'setYoutubeCta', {placeholder:'Vaata nüüd'});
+      html += imageField('Thumbnail / videopilt', y.thumbnail, 'setYoutubeThumbnail', 'Soovituslik 1280×720, minimaalne 1280×640, suhe 16:9, JPG/GIF/PNG, alla 2 MB.');
+      html += `<div class="spec">Selles plokis on fookus videoreklaamide juures nähtavatel tekstidel, mitte bännerpaigutusel. Eelvaade aitab hinnata pealkirja ja kirjeldusrea pikkust ning asukohta video ümber.</div>`;
+      return html;
+    }
+
+    function renderForm(){
+      let html = '';
+      if(state.activeTab === 'googleSearch') html = renderGoogleSearchForm();
+      if(state.activeTab === 'googleDisplay') html = renderGoogleDisplayForm();
+      if(state.activeTab === 'meta') html = renderMetaForm();
+      if(state.activeTab === 'linkedin') html = renderLinkedInForm();
+      if(state.activeTab === 'youtube') html = renderYoutubeForm();
+      document.getElementById('formArea').innerHTML = html;
+    }
+
+    function buildGoogleCombination(){
+      const g = state.googleSearch;
+      const seed = state.seed;
+      const headlineSlots = {H1:null,H2:null,H3:null};
+      const descSlots = {D1:null,D2:null};
+
+      const usedH = new Set();
+      ['H1','H2','H3'].forEach((slot, idx)=>{
+        const matches = g.headlines.map((h, i)=>({...h, i})).filter(h=>h.pin===slot && h.text.trim());
+        if(matches.length){
+          const picked = matches[(seed + idx) % matches.length];
+          headlineSlots[slot] = picked.text.trim();
+          usedH.add(picked.i);
+        }
+      });
+      const freeHeadlines = g.headlines.map((h,i)=>({...h,i})).filter(h=>h.text.trim() && !usedH.has(h.i) && !h.pin);
+      const rotatedFreeH = freeHeadlines.length ? [...freeHeadlines.slice(seed % freeHeadlines.length), ...freeHeadlines.slice(0, seed % freeHeadlines.length)] : [];
+      ['H1','H2','H3'].forEach(slot=>{
+        if(!headlineSlots[slot] && rotatedFreeH.length) headlineSlots[slot] = rotatedFreeH.shift().text.trim();
+      });
+
+      const usedD = new Set();
+      ['D1','D2'].forEach((slot, idx)=>{
+        const matches = g.descriptions.map((d, i)=>({...d, i})).filter(d=>d.pin===slot && d.text.trim());
+        if(matches.length){
+          const picked = matches[(seed + idx) % matches.length];
+          descSlots[slot] = picked.text.trim();
+          usedD.add(picked.i);
+        }
+      });
+      const freeDescs = g.descriptions.map((d,i)=>({...d,i})).filter(d=>d.text.trim() && !usedD.has(d.i) && !d.pin);
+      const rotatedFreeD = freeDescs.length ? [...freeDescs.slice(seed % freeDescs.length), ...freeDescs.slice(0, seed % freeDescs.length)] : [];
+      ['D1','D2'].forEach(slot=>{
+        if(!descSlots[slot] && rotatedFreeD.length) descSlots[slot] = rotatedFreeD.shift().text.trim();
+      });
+
+      return {
+        headlines: [headlineSlots.H1, headlineSlots.H2, headlineSlots.H3].filter(Boolean),
+        descriptions: [descSlots.D1, descSlots.D2].filter(Boolean)
+      };
+    }
+
+    function renderPreviewToolbar(){
+      let html = '';
+      if(state.activeTab === 'googleSearch'){
+        html += [
+          {value:'desktop', label:'Lauaarvuti'},
+          {value:'mobile', label:'Mobiil'}
+        ].map(v=>`<button class="pill ${state.googleSearchView===v.value?'active':''}" onclick="setGoogleSearchView('${v.value}')">${v.label}</button>`).join('');
+      }
+      if(state.activeTab === 'googleDisplay'){
+        const opts = ['D1','D2','D3','D4','D5','M1','M2','M3','M4','M5'];
+        html += opts.map(v=>`<button class="pill ${state.googleDisplayView===v?'active':''}" onclick="setGoogleDisplayView('${v}')">${v.startsWith('D')?'L':'M'} ${v.slice(1)}</button>`).join('');
+        html += `<span class="toolbar-note">D = lauaarvuti, M = mobiil</span>`;
+      }
+      document.getElementById('previewToolbar').innerHTML = html;
+    }
+
+    function renderGooglePreview(){
+      const g = state.googleSearch;
+      const combo = buildGoogleCombination();
+      const domain = safeDomain(g.finalUrl);
+      const path = g.paths.filter(Boolean).join('/');
+      const callouts = g.callouts.filter(Boolean).slice(0,4);
+      const sitelinks = g.sitelinks.filter(Boolean).slice(0,4);
+      const mobile = state.googleSearchView === 'mobile';
+
+      document.getElementById('previewNote').innerText =
+        'Otsinguelamus on kujundatud Google’i tulemuslehele lähedaseks. Pealkirjade ja kirjelduste valik arvestab kinnitatud positsioone.';
+
+      return `
+        <div class="${mobile ? 'mobile-frame':''}">
+          <div class="google-shell">
+            <div class="g-top">
+              <div class="g-searchbar">
+                <span>🔍</span>
+                <span class="search-text">${esc(combo.headlines[0] || 'Otsingureklaami pealkiri')}</span>
+                <span style="margin-left:auto">🎤</span>
+              </div>
+              <div class="g-tabs">
+                <span class="active">Kõik</span><span>Pildid</span><span>Videod</span><span>Uudised</span><span>Kaardid</span>
+              </div>
+            </div>
+            <div class="g-result">
+              <div class="g-line">
+                <div class="g-fav">${esc(domain[0] || 'S').toUpperCase()}</div>
+                <div style="min-width:0">
+                  <div class="g-domain">${esc(domain)} ${path ? `<span style="color:#5f6368">/ ${esc(path)}</span>`:''}</div>
+                  <div class="g-sponsored">Sponsoreeritud</div>
+                  <div class="g-title">${esc(combo.headlines.join(' · ') || 'Sinu reklaami pealkiri tuleb siia')}</div>
+                  <div class="g-desc">${esc(combo.descriptions.join(' ') || 'Sinu reklaami kirjeldus tuleb siia')}</div>
+                </div>
+              </div>
+              ${callouts.length ? `<div class="g-badges">${callouts.map(c=>`<span>${esc(c)}</span>`).join('')}</div>`:''}
+              ${sitelinks.length ? `<div class="g-sitelinks">${sitelinks.map(s=>`<div><strong>${esc(s)}</strong><span style="font-size:12px;color:#64748b">${esc(domain)}</span></div>`).join('')}</div>`:''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    
+    function renderDisplayPreview(){
+      const d = state.googleDisplay;
+      const domain = safeDomain(d.finalUrl);
+      const head = d.shortHeadlines.filter(Boolean)[state.seed % Math.max(d.shortHeadlines.filter(Boolean).length,1)] || 'Lühike pealkiri';
+      const desc = d.descriptions.filter(Boolean)[state.seed % Math.max(d.descriptions.filter(Boolean).length,1)] || 'Kirjeldus';
+      const v = state.googleDisplayView;
+      document.getElementById('previewNote').innerText =
+        'Responsive Display on varapõhine formaat: Google sobitab sama reklaami eri pindadele dünaamiliselt. Siin on 10 realistlikumat näidispaigutust, sh mobiiliäpp ja interstitial.';
+      const blocks = {
+        D1: `<div class="display-card"><img class="img landscape" src="${esc(d.landscapeImage)}"><div class="display-body"><div class="label">Lauaarvuti 1</div><h3>${esc(d.longHeadline)}</h3><p class="muted" style="margin:8px 0 14px">${esc(desc)}</p><button class="cta dark">${esc(d.cta)}</button></div></div>`,
+        D2: `<div class="display-card"><div style="display:grid;grid-template-columns:minmax(0,1.45fr) minmax(240px,.95fr);align-items:start"><div style="padding:16px 0 16px 16px"><img src="${esc(d.landscapeImage)}" style="width:100%;display:block;aspect-ratio:1.91/1;object-fit:cover;border-radius:20px;background:#e5e7eb"></div><div class="display-body" style="padding-left:14px"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><img src="${esc(d.logoImage)}" style="width:42px;height:42px;border-radius:12px;object-fit:cover"><div><strong>${esc(d.businessName)}</strong><div class="muted" style="font-size:12px">${esc(domain)}</div></div></div><h3>${esc(head)}</h3><p class="muted" style="margin:8px 0 14px">${esc(desc)}</p><button class="cta">${esc(d.cta)}</button></div></div></div>`,
+        D3: `<div class="display-card"><div class="display-body"><div class="label">Lauaarvuti 3</div><div style="display:flex;gap:14px;align-items:flex-start"><img src="${esc(d.logoImage)}" style="width:52px;height:52px;border-radius:14px;object-fit:cover"><div><div class="muted" style="font-size:12px">${esc(d.businessName)}</div><h3>${esc(d.longHeadline)}</h3><p class="muted" style="margin-top:8px">${esc(desc)}</p></div></div><img class="img landscape" src="${esc(d.landscapeImage)}" style="margin-top:14px;border-radius:18px"><div style="margin-top:14px"><button class="cta dark">${esc(d.cta)}</button></div></div></div>`,
+        D4: `<div class="display-card"><img class="img square" src="${esc(d.squareImage)}" style="max-width:340px;margin:18px auto 0;border-radius:22px"><div class="display-body" style="text-align:center"><div class="muted" style="font-size:12px">${esc(d.businessName)}</div><h3>${esc(head)}</h3><p class="muted" style="margin:8px 0 14px">${esc(desc)}</p><button class="cta">${esc(d.cta)}</button></div></div>`,
+        D5: `<div class="display-card"><div class="display-body"><div class="label">Lauaarvuti 5</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center"><div><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><img src="${esc(d.logoImage)}" style="width:40px;height:40px;border-radius:12px;object-fit:cover"><strong>${esc(d.businessName)}</strong></div><h3>${esc(head)}</h3><p class="muted" style="margin:8px 0 14px">${esc(desc)}</p><button class="cta dark">${esc(d.cta)}</button></div><img class="img square" src="${esc(d.squareImage)}" style="border-radius:20px"></div></div></div>`,
+        M1: `<div class="mobile-frame"><div class="display-card"><img class="img landscape" src="${esc(d.landscapeImage)}"><div class="display-body"><div class="muted" style="font-size:12px">${esc(d.businessName)}</div><h3>${esc(head)}</h3><p class="muted" style="margin:8px 0 14px">${esc(desc)}</p><button class="cta dark">${esc(d.cta)}</button></div></div></div>`,
+        M2: `<div class="mobile-frame"><div class="display-card"><div class="display-body"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><img src="${esc(d.logoImage)}" style="width:38px;height:38px;border-radius:10px;object-fit:cover"><div><strong>${esc(d.businessName)}</strong><div class="muted" style="font-size:12px">Mobiiläpp</div></div></div><img class="img square" src="${esc(d.squareImage)}" style="border-radius:18px"><h3 style="margin-top:12px">${esc(head)}</h3><p class="muted" style="margin-top:8px">${esc(desc)}</p><div style="margin-top:14px"><button class="cta">${esc(d.cta)}</button></div></div></div></div>`,
+        M3: `<div class="mobile-frame"><div class="display-card"><img class="img square" src="${esc(d.squareImage)}"><div class="display-body"><div class="label">Mobiil 3</div><h3>${esc(d.longHeadline)}</h3><button class="cta dark" style="margin-top:14px">${esc(d.cta)}</button></div></div></div>`,
+        M4: `<div class="mobile-frame"><div style="background:#eceff3;border:1px solid #d6dbe3;border-radius:28px;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,.08)"><div style="padding:12px 14px;background:#f8fafc;border-bottom:1px solid #dfe5ec;display:flex;align-items:center;gap:10px"><img src="${esc(d.logoImage)}" style="width:28px;height:28px;border-radius:8px;object-fit:cover"><div style="min-width:0"><div style="font-size:13px;font-weight:700">${esc(d.businessName)}</div><div class="muted" style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(domain)}</div></div><span style="margin-left:auto;font-size:11px;color:#64748b">Mobiiliäpp</span></div><img src="${esc(d.squareImage)}" style="width:100%;display:block;aspect-ratio:1/1;object-fit:cover;background:#e5e7eb"><div style="padding:14px 14px 16px"><h3 style="margin:0 0 6px">${esc(head)}</h3><p class="muted" style="margin:0 0 14px;line-height:1.5">${esc(desc)}</p><button class="cta dark">${esc(d.cta)}</button></div></div></div>`,
+        M5: `<div class="mobile-frame"><div style="background:#d1d5db;border:1px solid #cbd5e1;border-radius:28px;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,.08)"><div style="height:16px;background:#77a532"></div><div style="position:relative;background:#d1d5db"><img src="${esc(d.portraitImage || d.squareImage)}" style="width:100%;display:block;aspect-ratio:9/16;object-fit:cover;background:#d1d5db"><div style="position:absolute;left:0;right:0;bottom:0;padding:10px 16px 18px;background:linear-gradient(to top, rgba(107,114,128,.96), rgba(107,114,128,.82) 42%, rgba(107,114,128,0));color:#fff"><div style="font-size:13px;line-height:1.2;opacity:.96">${esc(d.businessName)}</div><div style="font-size:16px;font-weight:800;line-height:1.2;margin-top:6px">${esc(head)}</div><div style="font-size:12px;line-height:1.5;margin-top:6px;max-width:280px">${esc(desc)}</div><div style="display:flex;justify-content:center;margin-top:14px"><button class="cta" style="min-width:170px;background:#fff;border-color:#fff">${esc(d.cta)}</button></div></div></div></div></div>`
+      };
+      return blocks[v] || blocks.D1;
+    }
+
+
+    
+    function renderMetaPreview(){
+      const m = state.meta;
+      const domain = safeDomain(m.finalUrl);
+      const storyImage = m.portraitImage || m.image;
+      if(m.placement === 'story' || m.placement === 'reels'){
+        document.getElementById('previewNote').innerText =
+          'Story ja Reels on viidud lähemale rakenduse tegelikule UI-loogikale: nähtavaimad elemendid on konto, keskele paigutatud CTA, caption ja platvormi juhtnupud. Feedi pealkiri/kirjeldus ei ilmu siin samal kujul nagu feedis.';
+      } else {
+        document.getElementById('previewNote').innerText =
+          'Feedi ja karusselli eelvaade aitab hinnata pealkirju, põhiteksti ja kaartide omavahelist rütmi.';
+      }
+      if(m.placement === 'facebook'){
+        return `<div class="social-card">
+          <div class="meta-head"><img src="${esc(m.image)}" class="avatar"><div><strong>${esc(m.pageName)}</strong><div class="muted" style="font-size:12px">Sponsoreeritud</div></div></div>
+          <div class="card-body" style="padding-top:0">${esc(m.primaryText)}</div>
+          ${renderMetaFeedMedia(m.image)}
+          <div class="social-linkbox"><div><div class="muted" style="font-size:12px">${esc(domain)}</div><strong>${esc(m.headline)}</strong><div class="muted" style="font-size:12px">${esc(m.description)}</div></div><button class="cta">${esc(m.cta)}</button></div>
+        </div>`;
+      }
+      if(m.placement === 'instagram'){
+        return `<div class="mobile-frame"><div class="social-card">
+          <div class="meta-head"><img src="${esc(m.image)}" class="avatar"><div><strong>${esc(m.pageName)}</strong><div class="muted" style="font-size:12px">Sponsoreeritud</div></div></div>
+          ${renderMetaFeedMedia(m.image)}
+          <div class="card-body"><strong>${esc(m.pageName)}</strong> ${esc(m.primaryText)}
+            <div style="margin-top:14px;border:1px solid var(--line);border-radius:16px;padding:12px;background:#f8fafc">
+              <div class="muted" style="font-size:12px">${esc(domain)}</div>
+              <strong>${esc(m.headline)}</strong>
+              <div class="muted" style="font-size:12px">${esc(m.description)}</div>
+            </div>
+          </div>
+        </div></div>`;
+      }
+      if(m.placement === 'story'){
+        return `<div style="width:372px;max-width:100%;margin:0 auto;background:#000;border:1px solid #111827;box-shadow:0 8px 24px rgba(15,23,42,.2)">
+          <div style="position:relative;aspect-ratio:9/16;background:#000">
+            <img src="${esc(storyImage)}" style="width:100%;height:100%;display:block;object-fit:cover;background:#000">
+            <div style="position:absolute;top:9%;left:7%;right:7%;bottom:16%;border:1px dashed rgba(255,255,255,.55);border-radius:14px;pointer-events:none"></div>
+            <div style="position:absolute;left:8px;right:8px;top:8px;display:flex;align-items:center;gap:8px;color:#fff;font-size:12px;z-index:2">
+              <div style="width:18px;height:18px;border-radius:999px;background:#ef4444;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">S</div>
+              <div style="font-weight:600">${esc(m.pageName)}</div>
+              <div style="opacity:.8">•</div>
+              <div style="opacity:.85">Sponsoreeritud</div>
+              <div style="margin-left:auto;display:flex;gap:10px;align-items:center"><span style="opacity:.8">•••</span><span style="font-size:16px;line-height:1">×</span></div>
+            </div>
+            <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:84px;z-index:2">
+              <button style="display:inline-flex;align-items:center;gap:8px;background:#fff;color:#111827;border:0;border-radius:10px;padding:8px 16px;font-size:12px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.18)"><span style="display:inline-flex;width:14px;height:14px;border-radius:999px;border:1px solid #93c5fd;color:#2563eb;align-items:center;justify-content:center;font-size:10px">↗</span>${esc(m.cta)}</button>
+            </div>
+            <div style="position:absolute;left:12px;right:56px;bottom:46px;color:#fff;font-size:12px;line-height:1.35;text-shadow:0 1px 2px rgba(0,0,0,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:2">${esc(m.primaryText)}</div>
+          </div>
+          <div style="height:30px;background:#000;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:11px">
+            <strong style="font-weight:600">Ad</strong>
+            <div style="display:flex;gap:12px;align-items:center;font-size:16px"><span>♡</span><span>◌</span><span>➤</span></div>
+          </div>
+        </div>`;
+      }
+      if(m.placement === 'reels'){
+        return `<div style="width:372px;max-width:100%;margin:0 auto;background:#000;border:1px solid #111827;box-shadow:0 8px 24px rgba(15,23,42,.2)">
+          <div style="position:relative;aspect-ratio:9/16;background:#000">
+            <img src="${esc(storyImage)}" style="width:100%;height:100%;display:block;object-fit:cover;background:#000">
+            <div style="position:absolute;left:0;right:0;top:0;height:28px;background:#000;display:flex;align-items:center;justify-content:space-between;padding:0 10px;color:#fff;font-size:13px;font-weight:700;z-index:2"><span>Reels</span><span style="font-size:12px">◉</span></div>
+            <div style="position:absolute;top:7%;left:7%;right:16%;bottom:17%;border:1px dashed rgba(255,255,255,.45);border-radius:14px;pointer-events:none"></div>
+            <div style="position:absolute;right:10px;bottom:78px;display:flex;flex-direction:column;align-items:center;gap:14px;color:#fff;z-index:2">
+              <div style="font-size:18px">♡</div>
+              <div style="font-size:18px">◌</div>
+              <div style="font-size:18px">➤</div>
+              <div style="font-size:18px">⋯</div>
+            </div>
+            <div style="position:absolute;left:50%;transform:translateX(-50%);bottom:82px;z-index:2">
+              <button style="display:inline-flex;align-items:center;gap:8px;background:#fff;color:#111827;border:0;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,.18)">${esc(m.cta)}</button>
+            </div>
+            <div style="position:absolute;left:10px;right:56px;bottom:34px;color:#fff;z-index:2">
+              <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600">
+                <div style="width:18px;height:18px;border-radius:999px;background:#ef4444;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">S</div>
+                <span>${esc(m.pageName)}</span>
+                <button style="border:1px solid rgba(255,255,255,.65);background:transparent;color:#fff;border-radius:999px;padding:1px 8px;font-size:10px;font-weight:700">Follow</button>
+              </div>
+              <div style="margin-top:4px;font-size:12px;line-height:1.35;text-shadow:0 1px 2px rgba(0,0,0,.45);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(m.primaryText)}</div>
+            </div>
+            <div style="position:absolute;left:0;right:0;bottom:0;height:24px;background:#000;color:#fff;display:flex;align-items:center;padding:0 8px;font-size:11px;z-index:2"><strong style="font-weight:600">Ad</strong></div>
+          </div>
+        </div>`;
+      }
+      return `<div class="social-card">
+        <div class="meta-head"><img src="${esc(m.image)}" class="avatar"><div><strong>${esc(m.pageName)}</strong><div class="muted" style="font-size:12px">Sponsoreeritud</div></div></div>
+        <div class="card-body" style="padding-top:0">${esc(m.primaryText)}</div>
+        <div class="carousel-track" style="padding:0 16px 16px 16px">
+          ${m.carouselCards.map(card=>`
+            <div class="carousel-card">
+              <img class="img square" src="${esc(card.image)}">
+              <div class="card-body">
+                <strong>${esc(card.headline)}</strong>
+                <div class="muted" style="font-size:13px;margin-top:6px">${esc(card.description)}</div>
+                <div class="muted" style="font-size:12px;margin-top:8px">${esc(safeDomain(card.url))}</div>
+                <button class="cta" style="margin-top:10px">${esc(m.cta)}</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    }
+
+
+    function renderLinkedinPreview(){
+      const l = state.linkedin;
+      const domain = safeDomain(l.finalUrl);
+      document.getElementById('previewNote').innerText =
+        'LinkedIni eelvaade on praktiline B2B-ülevaate tööriist. Pikemate tekstide puhul kontrolli, kuidas algusosa kohe nähtavale jääb.';
+      if(l.format === 'single'){
+        return `<div class="linkedin-card">
+          <div class="card-body">
+            <div style="display:flex;gap:12px;align-items:center">
+              <img src="${esc(l.logo)}" style="width:48px;height:48px;border-radius:14px;object-fit:cover">
+              <div><strong>${esc(l.company)}</strong><div class="muted" style="font-size:12px">Promoted</div></div>
+            </div>
+            <div style="margin-top:14px;line-height:1.6">${esc(l.introText)}</div>
+          </div>
+          <img class="img landscape" src="${esc(l.image)}">
+          <div class="social-linkbox"><div><div class="muted" style="font-size:12px">${esc(domain)}</div><strong>${esc(l.headline)}</strong><div class="muted" style="font-size:12px">${esc(l.description)}</div></div><button class="cta">${esc(l.cta)}</button></div>
+        </div>`;
+      }
+      return `<div class="linkedin-card">
+        <div class="card-body">
+          <div style="display:flex;gap:12px;align-items:center">
+            <img src="${esc(l.logo)}" style="width:48px;height:48px;border-radius:14px;object-fit:cover">
+            <div><strong>${esc(l.company)}</strong><div class="muted" style="font-size:12px">Promoted</div></div>
+          </div>
+          <div style="margin-top:14px;line-height:1.6">${esc(l.introText)}</div>
+        </div>
+        <div class="carousel-track" style="padding:0 16px 16px 16px">
+          ${l.carouselCards.map(card=>`
+            <div class="carousel-card">
+              <img class="img square" src="${esc(card.image)}">
+              <div class="card-body">
+                <strong>${esc(card.headline)}</strong>
+                <div class="muted" style="font-size:13px;margin-top:6px">${esc(card.description)}</div>
+                <div class="muted" style="font-size:12px;margin-top:8px">${esc(safeDomain(card.url))}</div>
+                <button class="cta" style="margin-top:10px">${esc(l.cta)}</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    }
+
+    function renderYoutubePreview(){
+      const y = state.youtube;
+      document.getElementById('previewNote').innerText =
+        'Siin on rõhk videoreklaami juures nähtavatel tekstidel. Pealkiri ja kaks kirjeldusrida aitavad hinnata, kui hästi sõnum mahub video kõrvale või alla.';
+      if(y.placement === 'shorts'){
+        return `<div class="story-frame">
+          <img class="img portrait" src="${esc(y.thumbnail)}">
+          <div style="position:absolute;top:16px;left:16px" class="chip">${esc(y.badge)}</div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;color:#fff;background:linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,.1) 45%, rgba(0,0,0,0));">
+            <div style="font-size:13px;opacity:.9">${esc(y.channel)}</div>
+            <div style="font-size:22px;font-weight:800;line-height:1.15;margin-top:10px">${esc(y.title)}</div>
+            <div style="font-size:14px;line-height:1.5;margin-top:10px">${esc(y.desc1)}</div>
+            <div style="font-size:13px;opacity:.95;margin-top:4px">${esc(y.desc2)}</div>
+            <button class="cta" style="margin-top:14px;width:max-content">${esc(y.cta)}</button>
+          </div>
+        </div>`;
+      }
+      if(y.placement === 'watchnext'){
+        return `<div class="yt-card">
+          <img class="thumb" src="${esc(y.thumbnail)}">
+          <div class="yt-meta">
+            <div class="yt-avatar"></div>
+            <div style="min-width:0">
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong>${esc(y.title)}</strong><span class="chip">${esc(y.badge)}</span></div>
+              <div class="muted" style="font-size:13px;margin-top:6px">${esc(y.channel)}</div>
+              <div class="muted" style="font-size:13px;margin-top:6px">${esc(y.desc1)}</div>
+              <div class="muted" style="font-size:13px">${esc(y.desc2)}</div>
+              <div style="margin-top:12px"><button class="cta">${esc(y.cta)}</button></div>
+            </div>
+          </div>
+        </div>`;
+      }
+      return `<div class="yt-card">
+        <img class="thumb" src="${esc(y.thumbnail)}">
+        <div class="yt-meta">
+          <div class="yt-avatar"></div>
+          <div style="min-width:0">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong>${esc(y.title)}</strong><span class="chip">${esc(y.badge)}</span></div>
+            <div class="muted" style="font-size:13px;margin-top:6px">${esc(y.channel)}</div>
+            <div class="kpi"><span>${esc(y.desc1)}</span><span>${esc(y.desc2)}</span></div>
+            <div style="margin-top:12px"><button class="cta">${esc(y.cta)}</button></div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function renderPreview(){
+      let html = '';
+      if(state.activeTab === 'googleSearch') html = renderGooglePreview();
+      if(state.activeTab === 'googleDisplay') html = renderDisplayPreview();
+      if(state.activeTab === 'meta') html = renderMetaPreview();
+      if(state.activeTab === 'linkedin') html = renderLinkedinPreview();
+      if(state.activeTab === 'youtube') html = renderYoutubePreview();
+      document.getElementById('previewArea').innerHTML = html;
+    }
+
+    function renderDiagnostics(){
+      const rows = [];
+      const pushRow = (label, current, limit, isBad) => rows.push(`
+        <div class="diag-item">
+          <div>${label}</div>
+          <div class="${isBad ? 'badtxt':'ok'}">${current}/${limit}</div>
+        </div>
+      `);
+      if(state.activeTab === 'googleSearch'){
+        state.googleSearch.headlines.slice(0,5).forEach((h,i)=>pushRow(`Pealkiri ${i+1}`, toLengthGoogle(h.text), 30, toLengthGoogle(h.text)>30));
+        state.googleSearch.descriptions.slice(0,4).forEach((d,i)=>pushRow(`Kirjeldus ${i+1}`, toLengthGoogle(d.text), 90, toLengthGoogle(d.text)>90));
+        pushRow('Path 1', toLengthGoogle(state.googleSearch.paths[0]), 15, toLengthGoogle(state.googleSearch.paths[0])>15);
+        pushRow('Path 2', toLengthGoogle(state.googleSearch.paths[1]), 15, toLengthGoogle(state.googleSearch.paths[1])>15);
+        pushRow('Kinnitatud pealkirju', state.googleSearch.headlines.filter(h=>h.pin).length, 15, false);
+        pushRow('Kinnitatud kirjeldusi', state.googleSearch.descriptions.filter(d=>d.pin).length, 4, false);
+      }
+      if(state.activeTab === 'googleDisplay'){
+        pushRow('Brändi nimi', (state.googleDisplay.businessName||'').length, 25, (state.googleDisplay.businessName||'').length>25);
+        pushRow('Pikk pealkiri', (state.googleDisplay.longHeadline||'').length, 90, (state.googleDisplay.longHeadline||'').length>90);
+        pushRow('Lühike pealkiri 1', (state.googleDisplay.shortHeadlines[0]||'').length, 30, (state.googleDisplay.shortHeadlines[0]||'').length>30);
+        pushRow('Kirjeldus 1', (state.googleDisplay.descriptions[0]||'').length, 90, (state.googleDisplay.descriptions[0]||'').length>90);
+        pushRow('Pealkirjade arv', state.googleDisplay.shortHeadlines.filter(Boolean).length, 5, false);
+        pushRow('Kirjelduste arv', state.googleDisplay.descriptions.filter(Boolean).length, 5, false);
+      }
+      if(state.activeTab === 'meta'){
+        pushRow('Põhitekst', (state.meta.primaryText||'').length, 125, (state.meta.primaryText||'').length>125);
+        pushRow('Pealkiri', (state.meta.headline||'').length, 40, (state.meta.headline||'').length>40);
+        pushRow('Kirjeldus', (state.meta.description||'').length, 25, (state.meta.description||'').length>25);
+        pushRow('Karussellikaardid', state.meta.carouselCards.length, 10, false);
+      }
+      if(state.activeTab === 'linkedin'){
+        pushRow('Sissejuhatav tekst', (state.linkedin.introText||'').length, 150, (state.linkedin.introText||'').length>150);
+        pushRow('Pealkiri', (state.linkedin.headline||'').length, 70, (state.linkedin.headline||'').length>70);
+        pushRow('Kirjeldus', (state.linkedin.description||'').length, 70, (state.linkedin.description||'').length>70);
+        pushRow('Karussellikaardid', state.linkedin.carouselCards.length, 10, false);
+      }
+      if(state.activeTab === 'youtube'){
+        pushRow('YouTube pealkiri', (state.youtube.title||'').length, 100, (state.youtube.title||'').length>100);
+        pushRow('Kirjeldusrida 1', (state.youtube.desc1||'').length, 35, (state.youtube.desc1||'').length>35);
+        pushRow('Kirjeldusrida 2', (state.youtube.desc2||'').length, 35, (state.youtube.desc2||'').length>35);
+      }
+      document.getElementById('diagnostics').innerHTML = rows.join('');
+    }
+
+    function renderNotes(){
+      const notes = {
+        googleSearch: `
+          <p>Google otsingureklaami plokk kasutab RSA loogikat: pealkirju ja kirjeldusi saab vajadusel kinnitada kindlatele positsioonidele.</p>
+          <p style="margin-top:8px">Tähemärkide kontroll on lisatud pealkirjadele, kirjeldustele ja path-väljadele. Pikemate tekstide puhul näed kohe, kui piirang läheb lõhki.</p>
+        `,
+        googleDisplay: `
+          <p>Responsive Display paigutused on näidisvaated. Tegelikkuses kombineerib Google varasid dünaamiliselt paljudele erinevatele pindadele.</p>
+          <p style="margin-top:8px">Seepärast on siin korraga mitu eri laua- ja mobiilipaigutust, et saada tunnetus võimalike väljundite kohta.</p>
+        `,
+        meta: `
+          <p>Meta plokis on feed, story, reels ja karussell ühe tööriista sees. Facebook Feed ja Instagram Feed kasutavad nüüd sama meediakäsitlust, et 1:1 ja 1.91:1 pildid käituksid eelvaates ühtemoodi. Story ja Reels näitavad safe area tsoone, kuhu oluline tekst võiks jääda.</p>
+          <p style="margin-top:8px">Pildimõõdud on toodud praktiliste juhistena, et materjalid oleksid lihtsamini kasutatavad eri paigutustes.</p>
+        `,
+        linkedin: `
+          <p>LinkedIni eelvaade keskendub B2B reklaamide praktilisele ülevaatusele. Tekstipiirid on nähtavuse soovitused, mitte kõigis olukordades jäik tehniline piir.</p>
+          <p style="margin-top:8px">Karussell aitab hinnata, kuidas kaardid omavahel töötavad ja kas esimesed kaardid on piisavalt tugevad.</p>
+        `,
+        youtube: `
+          <p>YouTube plokk keskendub videoreklaami ümber nähtavatele tekstidele: pealkiri, kaks kirjeldusrida ja CTA.</p>
+          <p style="margin-top:8px">See ei ole bännerloogika. Eelvaade aitab hinnata, kuidas videoreklaami tekstid mõjuvad in-feed, watch next ja shorts vaates.</p>
+        `
+      };
+      document.getElementById('notesArea').innerHTML = notes[state.activeTab];
+    }
+
+    function render(){
+      renderTabs();
+      renderWorkspace();
+      renderForm();
+      renderPreviewToolbar();
+      renderPreview();
+      renderDiagnostics();
+      renderNotes();
+      persistCurrentState();
+    }
+
+
+    function typeLabel(type){
+      return (TAB_META.find(tab => tab.key === type) || {}).label || type;
+    }
+
+    function exampleVariant(type){
+      if(type === 'googleSearch') return exampleState.googleSearchView;
+      if(type === 'googleDisplay') return exampleState.googleDisplayView;
+      if(type === 'meta') return exampleState.meta.placement;
+      if(type === 'linkedin') return exampleState.linkedin.format;
+      if(type === 'youtube') return exampleState.youtube.placement;
+      return '';
+    }
+
+    function getCurrentVariant(){
+      if(state.activeTab === 'googleSearch') return state.googleSearchView;
+      if(state.activeTab === 'googleDisplay') return state.googleDisplayView;
+      if(state.activeTab === 'meta') return state.meta.placement;
+      if(state.activeTab === 'linkedin') return state.linkedin.format;
+      if(state.activeTab === 'youtube') return state.youtube.placement;
+      return '';
+    }
+
+    function setVariantForType(type, value){
+      if(type === 'googleSearch') state.googleSearchView = value || exampleVariant(type);
+      if(type === 'googleDisplay') state.googleDisplayView = value || exampleVariant(type);
+      if(type === 'meta') state.meta.placement = value || exampleVariant(type);
+      if(type === 'linkedin') state.linkedin.format = value || exampleVariant(type);
+      if(type === 'youtube') state.youtube.placement = value || exampleVariant(type);
+    }
+
+    function emptyStateForType(type){
+      const presets = {
+        googleSearch: {
+          finalUrl: '',
+          paths: ['', ''],
+          headlines: [{ text: '', pin: '' }, { text: '', pin: '' }, { text: '', pin: '' }],
+          descriptions: [{ text: '', pin: '' }, { text: '', pin: '' }],
+          callouts: [''],
+          sitelinks: ['']
+        },
+        googleDisplay: {
+          finalUrl: '',
+          businessName: '',
+          longHeadline: '',
+          shortHeadlines: ['', '', ''],
+          descriptions: ['', ''],
+          cta: '',
+          landscapeImage: '',
+          squareImage: '',
+          portraitImage: '',
+          logoImage: ''
+        },
+        meta: {
+          placement: 'facebook',
+          brand: '',
+          pageName: '',
+          primaryText: '',
+          headline: '',
+          description: '',
+          cta: '',
+          finalUrl: '',
+          image: '',
+          portraitImage: '',
+          carouselCards: [
+            { headline: '', description: '', url: '', image: '' },
+            { headline: '', description: '', url: '', image: '' }
+          ]
+        },
+        linkedin: {
+          format: 'single',
+          company: '',
+          introText: '',
+          headline: '',
+          description: '',
+          cta: '',
+          finalUrl: '',
+          image: '',
+          logo: '',
+          carouselCards: [
+            { headline: '', description: '', url: '', image: '' },
+            { headline: '', description: '', url: '', image: '' }
+          ]
+        },
+        youtube: {
+          placement: 'infeed',
+          channel: '',
+          videoUrl: '',
+          thumbnail: '',
+          title: '',
+          desc1: '',
+          desc2: '',
+          cta: '',
+          badge: 'Reklaam'
+        }
+      };
+      return clone(presets[type] || {});
+    }
+
+    function clearCurrentForm(){
+      state[state.activeTab] = emptyStateForType(state.activeTab);
+      setVariantForType(state.activeTab, exampleVariant(state.activeTab));
+      if(!workspace.draftName || workspace.draftName.trim() === ''){
+        workspace.draftName = defaultDraftName(state.activeTab);
+      }
+      render();
+    }
+
+    function defaultDraftName(type){
+      const names = {
+        googleSearch: 'Google otsingureklaam',
+        googleDisplay: 'Google Display reklaam',
+        meta: 'Meta reklaam',
+        linkedin: 'LinkedIn reklaam',
+        youtube: 'YouTube reklaam'
+      };
+      const count = workspace.items.filter(item => item.type === type).length + 1;
+      return `${names[type] || 'Reklaam'} ${count}`;
+    }
+
+    function persistWorkspace(){
+      try{
+        localStorage.setItem(WORKSPACE_KEY, JSON.stringify(workspace));
+      }catch(e){}
+    }
+
+    function loadWorkspace(){
+      try{
+        const raw = localStorage.getItem(WORKSPACE_KEY) || localStorage.getItem(PREVIOUS_WORKSPACE_KEY);
+        if(!raw) return;
+        const parsed = JSON.parse(raw);
+        if(parsed && Array.isArray(parsed.items)){
+          workspace.items = parsed.items;
+          workspace.activeId = parsed.activeId || null;
+          workspace.draftName = parsed.draftName || '';
+          workspace.draftGroup = parsed.draftGroup || '';
+        }
+      }catch(e){}
+    }
+
+    function syncDraftName(value){
+      workspace.draftName = value;
+      persistWorkspace();
+    }
+
+    function syncDraftGroup(value){
+      workspace.draftGroup = value;
+      persistWorkspace();
+    }
+
+    function makeId(){
+      return 'ad_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+    }
+
+    function summarizeAsset(value){
+      if(!value) return '';
+      if(String(value).startsWith('data:image/')) return '[üles laetud fail]';
+      return String(value);
+    }
+
+    function serializeCurrentDraft(idOverride){
+      const type = state.activeTab;
+      return {
+        id: idOverride || makeId(),
+        name: (workspace.draftName || defaultDraftName(type)).trim(),
+        adGroup: (workspace.draftGroup || '').trim(),
+        type,
+        variant: getCurrentVariant(),
+        data: clone(state[type]),
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    function renderWorkspace(){
+      const list = document.getElementById('savedAdsList');
+      const nameInput = document.getElementById('draftNameInput');
+      const groupInput = document.getElementById('draftGroupInput');
+      const groupSuggestions = document.getElementById('adGroupSuggestions');
+      if(nameInput && document.activeElement !== nameInput){
+        nameInput.value = workspace.draftName || defaultDraftName(state.activeTab);
+      }
+      if(groupInput && document.activeElement !== groupInput){
+        groupInput.value = workspace.draftGroup || '';
+      }
+      const items = [...workspace.items].sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));
+      const groups = [...new Set(workspace.items.map(item => (item.adGroup || '').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'et'));
+      if(groupSuggestions){
+        groupSuggestions.innerHTML = groups.map(group => `<option value="${esc(group)}"></option>`).join('');
+      }
+      document.getElementById('workspaceStatus').innerText = `${workspace.items.length} salvestatud reklaami · ${groups.length} reklaamirühma · aktiivne töölaud: ${typeLabel(state.activeTab)}${workspace.activeId ? ' · valitud reklaam on avatud muutmiseks' : ''}`;
+      if(!items.length){
+        list.innerHTML = `<div class="saved-empty">Sul ei ole veel salvestatud reklaame. Muuda või tühjenda välju paremal, lisa mustandile nimi ja vajadusel reklaamirühm ning vajuta <strong>Salvesta reklaam</strong>. Seejärel saad kogu tööfaili CSV või XLSX kujul alla laadida.</div>`;
+        return;
+      }
+      list.innerHTML = items.map(item => `
+        <div class="saved-card ${workspace.activeId === item.id ? 'active':''}">
+          <div class="saved-card-head">
+            <div>
+              <div class="minihead">${esc(item.name)}</div>
+              <div class="saved-meta">${esc(typeLabel(item.type))}${item.variant ? ` · ${esc(item.variant)}` : ''}${item.adGroup ? `<br>Reklaamirühm: ${esc(item.adGroup)}` : ''}<br>Uuendatud: ${esc(new Date(item.updatedAt).toLocaleString('et-EE'))}</div>
+            </div>
+            <span class="chip">${esc(item.type)}</span>
+          </div>
+          <div class="saved-card-actions">
+            <button class="btn" onclick="openSavedAd('${esc(item.id)}')">Ava</button>
+            <button class="btn" onclick="duplicateSavedAd('${esc(item.id)}')">Duplitseeri</button>
+            <button class="btn" onclick="deleteSavedAd('${esc(item.id)}')">Kustuta</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function newDraft(){
+      workspace.activeId = null;
+      workspace.draftName = defaultDraftName(state.activeTab);
+      workspace.draftGroup = '';
+      state[state.activeTab] = emptyStateForType(state.activeTab);
+      setVariantForType(state.activeTab, exampleVariant(state.activeTab));
+      render();
+    }
+
+    function saveCurrentDraft(asCopy){
+      if(!workspace.draftName || !workspace.draftName.trim()) workspace.draftName = defaultDraftName(state.activeTab);
+      const existingIndex = workspace.items.findIndex(item => item.id === workspace.activeId);
+      if(asCopy || existingIndex === -1){
+        const item = serializeCurrentDraft();
+        workspace.items.unshift(item);
+        workspace.activeId = item.id;
+      }else{
+        const updated = serializeCurrentDraft(workspace.items[existingIndex].id);
+        workspace.items.splice(existingIndex, 1, updated);
+      }
+      persistWorkspace();
+      renderWorkspace();
+      alert('Reklaam salvestatud tööfaili.');
+    }
+
+    function openSavedAd(id){
+      const item = workspace.items.find(entry => entry.id === id);
+      if(!item) return;
+      state.activeTab = item.type;
+      state[item.type] = clone(item.data);
+      setVariantForType(item.type, item.variant || exampleVariant(item.type));
+      workspace.activeId = item.id;
+      workspace.draftName = item.name;
+      workspace.draftGroup = item.adGroup || '';
+      persistWorkspace();
+      render();
+    }
+
+    function duplicateSavedAd(id){
+      const item = workspace.items.find(entry => entry.id === id);
+      if(!item) return;
+      const copy = clone(item);
+      copy.id = makeId();
+      copy.name = `${item.name} (koopia)`;
+      copy.updatedAt = new Date().toISOString();
+      workspace.items.unshift(copy);
+      workspace.activeId = copy.id;
+      workspace.draftName = copy.name;
+      workspace.draftGroup = copy.adGroup || '';
+      persistWorkspace();
+      render();
+    }
+
+    function deleteSavedAd(id){
+      const item = workspace.items.find(entry => entry.id === id);
+      if(!item) return;
+      if(!confirm(`Kas kustutada reklaam "${item.name}"?`)) return;
+      workspace.items = workspace.items.filter(entry => entry.id !== id);
+      if(workspace.activeId === id){
+        workspace.activeId = null;
+        workspace.draftName = defaultDraftName(state.activeTab);
+        workspace.draftGroup = '';
+      }
+      persistWorkspace();
+      render();
+    }
+
+
+    function arrayCount(items, mapper){
+      return Math.max(0, ...items.map(item => mapper(item).filter(value => hasText(value)).length));
+    }
+
+    function normalizeSearchEntries(list){
+      return (list || []).map(entry => {
+        if(typeof entry === 'string') return { text: entry || '', pin: '' };
+        return { text: (entry && entry.text) || '', pin: (entry && entry.pin) || '' };
+      }).filter(entry => hasText(entry.text) || hasText(entry.pin));
+    }
+
+    function buildSearchSheet(items){
+      const normalized = items.map(item => ({
+        item,
+        data: item.data || {},
+        headlines: normalizeSearchEntries((item.data || {}).headlines),
+        descriptions: normalizeSearchEntries((item.data || {}).descriptions),
+        callouts: ((item.data || {}).callouts || []).filter(hasText),
+        sitelinks: ((item.data || {}).sitelinks || []).filter(hasText)
+      }));
+      const maxHeadlines = Math.max(0, ...normalized.map(entry => entry.headlines.length));
+      const maxDescriptions = Math.max(0, ...normalized.map(entry => entry.descriptions.length));
+      const maxCallouts = Math.max(0, ...normalized.map(entry => entry.callouts.length));
+      const maxSitelinks = Math.max(0, ...normalized.map(entry => entry.sitelinks.length));
+      const hasHeadlinePins = normalized.some(entry => entry.headlines.some(headline => hasText(headline.pin)));
+      const hasDescriptionPins = normalized.some(entry => entry.descriptions.some(description => hasText(description.pin)));
+      const hasPaths = normalized.some(entry => hasText((entry.data.paths || [])[0]) || hasText((entry.data.paths || [])[1]));
+      const headers = ['Reklaamirühm', 'Reklaami nimi', 'Lõpp-URL'];
+      if(hasPaths){
+        headers.push('Path 1', 'Path 2');
+      }
+      for(let i = 1; i <= maxHeadlines; i += 1){
+        headers.push(`Pealkiri ${i}`);
+        if(hasHeadlinePins) headers.push(`Pealkiri ${i} pin`);
+      }
+      for(let i = 1; i <= maxDescriptions; i += 1){
+        headers.push(`Kirjeldus ${i}`);
+        if(hasDescriptionPins) headers.push(`Kirjeldus ${i} pin`);
+      }
+      for(let i = 1; i <= maxCallouts; i += 1){
+        headers.push(`Callout ${i}`);
+      }
+      for(let i = 1; i <= maxSitelinks; i += 1){
+        headers.push(`Sitelink ${i}`);
+      }
+      const rows = normalized.map(entry => {
+        const row = {
+          'Reklaamirühm': entry.item.adGroup || '',
+          'Reklaami nimi': entry.item.name || '',
+          'Lõpp-URL': entry.data.finalUrl || ''
+        };
+        if(hasPaths){
+          row['Path 1'] = (entry.data.paths || [])[0] || '';
+          row['Path 2'] = (entry.data.paths || [])[1] || '';
+        }
+        for(let i = 0; i < maxHeadlines; i += 1){
+          const value = entry.headlines[i] || { text:'', pin:'' };
+          row[`Pealkiri ${i + 1}`] = value.text || '';
+          if(hasHeadlinePins) row[`Pealkiri ${i + 1} pin`] = value.pin || '';
+        }
+        for(let i = 0; i < maxDescriptions; i += 1){
+          const value = entry.descriptions[i] || { text:'', pin:'' };
+          row[`Kirjeldus ${i + 1}`] = value.text || '';
+          if(hasDescriptionPins) row[`Kirjeldus ${i + 1} pin`] = value.pin || '';
+        }
+        for(let i = 0; i < maxCallouts; i += 1){
+          row[`Callout ${i + 1}`] = entry.callouts[i] || '';
+        }
+        for(let i = 0; i < maxSitelinks; i += 1){
+          row[`Sitelink ${i + 1}`] = entry.sitelinks[i] || '';
+        }
+        return row;
+      });
+      return { name:'Otsing', headers, rows };
+    }
+
+    function buildGoogleDisplaySheet(items){
+      const normalized = items.map(item => {
+        const data = item.data || {};
+        return {
+          item,
+          data,
+          shortHeadlines: (data.shortHeadlines || []).filter(hasText),
+          descriptions: (data.descriptions || []).filter(hasText)
+        };
+      });
+      const maxShortHeadlines = Math.max(0, ...normalized.map(entry => entry.shortHeadlines.length));
+      const maxDescriptions = Math.max(0, ...normalized.map(entry => entry.descriptions.length));
+      const showVariant = normalized.some(entry => hasText(entry.item.variant));
+      const showUrl = normalized.some(entry => hasText(entry.data.finalUrl));
+      const showBrand = normalized.some(entry => hasText(entry.data.businessName));
+      const showCta = normalized.some(entry => hasText(entry.data.cta));
+      const showLongHeadline = normalized.some(entry => hasText(entry.data.longHeadline));
+      const showLandscape = normalized.some(entry => hasText(entry.data.landscapeImage));
+      const showSquare = normalized.some(entry => hasText(entry.data.squareImage));
+      const showPortrait = normalized.some(entry => hasText(entry.data.portraitImage));
+      const showLogo = normalized.some(entry => hasText(entry.data.logoImage));
+      const headers = ['Reklaamirühm', 'Reklaami nimi'];
+      if(showVariant) headers.push('Paigutus');
+      if(showUrl) headers.push('Lõpp-URL');
+      if(showBrand) headers.push('Brändi nimi');
+      if(showCta) headers.push('CTA');
+      if(showLongHeadline) headers.push('Pikk pealkiri');
+      for(let i = 1; i <= maxShortHeadlines; i += 1){
+        headers.push(`Lühike pealkiri ${i}`);
+      }
+      for(let i = 1; i <= maxDescriptions; i += 1){
+        headers.push(`Kirjeldus ${i}`);
+      }
+      if(showLandscape) headers.push('Põhipilt');
+      if(showSquare) headers.push('Ruutpilt');
+      if(showPortrait) headers.push('Vertikaalpilt');
+      if(showLogo) headers.push('Logo');
+      const rows = normalized.map(entry => {
+        const row = {
+          'Reklaamirühm': entry.item.adGroup || '',
+          'Reklaami nimi': entry.item.name || ''
+        };
+        if(showVariant) row['Paigutus'] = entry.item.variant || '';
+        if(showUrl) row['Lõpp-URL'] = entry.data.finalUrl || '';
+        if(showBrand) row['Brändi nimi'] = entry.data.businessName || '';
+        if(showCta) row['CTA'] = entry.data.cta || '';
+        if(showLongHeadline) row['Pikk pealkiri'] = entry.data.longHeadline || '';
+        for(let i = 0; i < maxShortHeadlines; i += 1){
+          row[`Lühike pealkiri ${i + 1}`] = entry.shortHeadlines[i] || '';
+        }
+        for(let i = 0; i < maxDescriptions; i += 1){
+          row[`Kirjeldus ${i + 1}`] = entry.descriptions[i] || '';
+        }
+        if(showLandscape) row['Põhipilt'] = summarizeAsset(entry.data.landscapeImage);
+        if(showSquare) row['Ruutpilt'] = summarizeAsset(entry.data.squareImage);
+        if(showPortrait) row['Vertikaalpilt'] = summarizeAsset(entry.data.portraitImage);
+        if(showLogo) row['Logo'] = summarizeAsset(entry.data.logoImage);
+        return row;
+      });
+      return { name:'Google Display', headers, rows };
+    }
+
+    function buildMetaSheet(items){
+      const normalized = items.map(item => {
+        const data = item.data || {};
+        return {
+          item,
+          data,
+          cards: (data.carouselCards || []).map(card => ({
+            headline: (card && card.headline) || '',
+            description: (card && card.description) || '',
+            url: (card && card.url) || '',
+            cta: (card && card.cta) || '',
+            image: summarizeAsset((card && (card.image || card.thumbnail)) || '')
+          }))
+        };
+      });
+      const maxCards = Math.max(0, ...normalized.map(entry => entry.cards.filter(card => hasText(card.headline) || hasText(card.description) || hasText(card.url) || hasText(card.cta) || hasText(card.image)).length));
+      const showPlacement = normalized.some(entry => hasText(entry.item.variant));
+      const showPage = normalized.some(entry => hasText(entry.data.pageName) || hasText(entry.data.brand));
+      const showUrl = normalized.some(entry => hasText(entry.data.finalUrl));
+      const showCta = normalized.some(entry => hasText(entry.data.cta));
+      const showPrimary = normalized.some(entry => hasText(entry.data.primaryText));
+      const showHeadline = normalized.some(entry => hasText(entry.data.headline));
+      const showDescription = normalized.some(entry => hasText(entry.data.description));
+      const showImage = normalized.some(entry => hasText(entry.data.image));
+      const showPortrait = normalized.some(entry => hasText(entry.data.portraitImage));
+      const cardCtaColumns = [];
+      const cardImageColumns = [];
+      const headers = ['Reklaamirühm', 'Reklaami nimi'];
+      if(showPlacement) headers.push('Paigutus');
+      if(showPage) headers.push('Leht / bränd');
+      if(showUrl) headers.push('Lõpp-URL');
+      if(showCta) headers.push('CTA');
+      if(showPrimary) headers.push('Põhitekst');
+      if(showHeadline) headers.push('Pealkiri');
+      if(showDescription) headers.push('Kirjeldus');
+      if(showImage) headers.push('Põhipilt');
+      if(showPortrait) headers.push('Vertikaalpilt');
+      for(let i = 1; i <= maxCards; i += 1){
+        headers.push(`Kaart ${i} pealkiri`, `Kaart ${i} kirjeldus`, `Kaart ${i} URL`);
+        if(normalized.some(entry => hasText((entry.cards[i - 1] || {}).cta))){
+          const key = `Kaart ${i} CTA`;
+          headers.push(key);
+          cardCtaColumns.push(key);
+        }
+        if(normalized.some(entry => hasText((entry.cards[i - 1] || {}).image))){
+          const key = `Kaart ${i} pilt`;
+          headers.push(key);
+          cardImageColumns.push(key);
+        }
+      }
+      const rows = normalized.map(entry => {
+        const row = {
+          'Reklaamirühm': entry.item.adGroup || '',
+          'Reklaami nimi': entry.item.name || ''
+        };
+        if(showPlacement) row['Paigutus'] = entry.item.variant || '';
+        if(showPage) row['Leht / bränd'] = entry.data.pageName || entry.data.brand || '';
+        if(showUrl) row['Lõpp-URL'] = entry.data.finalUrl || '';
+        if(showCta) row['CTA'] = entry.data.cta || '';
+        if(showPrimary) row['Põhitekst'] = entry.data.primaryText || '';
+        if(showHeadline) row['Pealkiri'] = entry.data.headline || '';
+        if(showDescription) row['Kirjeldus'] = entry.data.description || '';
+        if(showImage) row['Põhipilt'] = summarizeAsset(entry.data.image);
+        if(showPortrait) row['Vertikaalpilt'] = summarizeAsset(entry.data.portraitImage);
+        for(let i = 0; i < maxCards; i += 1){
+          const card = entry.cards[i] || {};
+          row[`Kaart ${i + 1} pealkiri`] = card.headline || '';
+          row[`Kaart ${i + 1} kirjeldus`] = card.description || '';
+          row[`Kaart ${i + 1} URL`] = card.url || '';
+          const ctaKey = `Kaart ${i + 1} CTA`;
+          const imageKey = `Kaart ${i + 1} pilt`;
+          if(cardCtaColumns.includes(ctaKey)) row[ctaKey] = card.cta || '';
+          if(cardImageColumns.includes(imageKey)) row[imageKey] = card.image || '';
+        }
+        return row;
+      });
+      return { name:'Meta', headers, rows };
+    }
+
+    function buildLinkedinSheet(items){
+      const normalized = items.map(item => {
+        const data = item.data || {};
+        return {
+          item,
+          data,
+          cards: (data.carouselCards || []).map(card => ({
+            headline: (card && card.headline) || '',
+            description: (card && card.description) || '',
+            url: (card && card.url) || '',
+            cta: (card && card.cta) || '',
+            image: summarizeAsset((card && (card.image || card.thumbnail)) || '')
+          }))
+        };
+      });
+      const maxCards = Math.max(0, ...normalized.map(entry => entry.cards.filter(card => hasText(card.headline) || hasText(card.description) || hasText(card.url) || hasText(card.cta) || hasText(card.image)).length));
+      const showPlacement = normalized.some(entry => hasText(entry.item.variant));
+      const showCompany = normalized.some(entry => hasText(entry.data.company));
+      const showUrl = normalized.some(entry => hasText(entry.data.finalUrl));
+      const showCta = normalized.some(entry => hasText(entry.data.cta));
+      const showIntro = normalized.some(entry => hasText(entry.data.introText));
+      const showHeadline = normalized.some(entry => hasText(entry.data.headline));
+      const showDescription = normalized.some(entry => hasText(entry.data.description));
+      const showImage = normalized.some(entry => hasText(entry.data.image));
+      const showLogo = normalized.some(entry => hasText(entry.data.logo));
+      const cardCtaColumns = [];
+      const cardImageColumns = [];
+      const headers = ['Reklaamirühm', 'Reklaami nimi'];
+      if(showPlacement) headers.push('Paigutus');
+      if(showCompany) headers.push('Ettevõte');
+      if(showUrl) headers.push('Lõpp-URL');
+      if(showCta) headers.push('CTA');
+      if(showIntro) headers.push('Introtekst');
+      if(showHeadline) headers.push('Pealkiri');
+      if(showDescription) headers.push('Kirjeldus');
+      if(showImage) headers.push('Põhipilt');
+      if(showLogo) headers.push('Logo');
+      for(let i = 1; i <= maxCards; i += 1){
+        headers.push(`Kaart ${i} pealkiri`, `Kaart ${i} kirjeldus`, `Kaart ${i} URL`);
+        if(normalized.some(entry => hasText((entry.cards[i - 1] || {}).cta))){
+          const key = `Kaart ${i} CTA`;
+          headers.push(key);
+          cardCtaColumns.push(key);
+        }
+        if(normalized.some(entry => hasText((entry.cards[i - 1] || {}).image))){
+          const key = `Kaart ${i} pilt`;
+          headers.push(key);
+          cardImageColumns.push(key);
+        }
+      }
+      const rows = normalized.map(entry => {
+        const row = {
+          'Reklaamirühm': entry.item.adGroup || '',
+          'Reklaami nimi': entry.item.name || ''
+        };
+        if(showPlacement) row['Paigutus'] = entry.item.variant || '';
+        if(showCompany) row['Ettevõte'] = entry.data.company || '';
+        if(showUrl) row['Lõpp-URL'] = entry.data.finalUrl || '';
+        if(showCta) row['CTA'] = entry.data.cta || '';
+        if(showIntro) row['Introtekst'] = entry.data.introText || '';
+        if(showHeadline) row['Pealkiri'] = entry.data.headline || '';
+        if(showDescription) row['Kirjeldus'] = entry.data.description || '';
+        if(showImage) row['Põhipilt'] = summarizeAsset(entry.data.image);
+        if(showLogo) row['Logo'] = summarizeAsset(entry.data.logo);
+        for(let i = 0; i < maxCards; i += 1){
+          const card = entry.cards[i] || {};
+          row[`Kaart ${i + 1} pealkiri`] = card.headline || '';
+          row[`Kaart ${i + 1} kirjeldus`] = card.description || '';
+          row[`Kaart ${i + 1} URL`] = card.url || '';
+          const ctaKey = `Kaart ${i + 1} CTA`;
+          const imageKey = `Kaart ${i + 1} pilt`;
+          if(cardCtaColumns.includes(ctaKey)) row[ctaKey] = card.cta || '';
+          if(cardImageColumns.includes(imageKey)) row[imageKey] = card.image || '';
+        }
+        return row;
+      });
+      return { name:'LinkedIn', headers, rows };
+    }
+
+    function buildYoutubeSheet(items){
+      const normalized = items.map(item => ({ item, data: item.data || {} }));
+      const showPlacement = normalized.some(entry => hasText(entry.item.variant));
+      const showChannel = normalized.some(entry => hasText(entry.data.channel));
+      const showVideoUrl = normalized.some(entry => hasText(entry.data.videoUrl));
+      const showCta = normalized.some(entry => hasText(entry.data.cta));
+      const showTitle = normalized.some(entry => hasText(entry.data.title));
+      const showDesc1 = normalized.some(entry => hasText(entry.data.desc1));
+      const showDesc2 = normalized.some(entry => hasText(entry.data.desc2));
+      const showThumb = normalized.some(entry => hasText(entry.data.thumbnail));
+      const headers = ['Reklaamirühm', 'Reklaami nimi'];
+      if(showPlacement) headers.push('Paigutus');
+      if(showChannel) headers.push('Kanal');
+      if(showVideoUrl) headers.push('Video URL');
+      if(showCta) headers.push('CTA');
+      if(showTitle) headers.push('Pealkiri');
+      if(showDesc1) headers.push('Kirjeldus 1');
+      if(showDesc2) headers.push('Kirjeldus 2');
+      if(showThumb) headers.push('Eelvaatepilt');
+      const rows = normalized.map(entry => {
+        const row = {
+          'Reklaamirühm': entry.item.adGroup || '',
+          'Reklaami nimi': entry.item.name || ''
+        };
+        if(showPlacement) row['Paigutus'] = entry.item.variant || '';
+        if(showChannel) row['Kanal'] = entry.data.channel || '';
+        if(showVideoUrl) row['Video URL'] = entry.data.videoUrl || '';
+        if(showCta) row['CTA'] = entry.data.cta || '';
+        if(showTitle) row['Pealkiri'] = entry.data.title || '';
+        if(showDesc1) row['Kirjeldus 1'] = entry.data.desc1 || '';
+        if(showDesc2) row['Kirjeldus 2'] = entry.data.desc2 || '';
+        if(showThumb) row['Eelvaatepilt'] = summarizeAsset(entry.data.thumbnail);
+        return row;
+      });
+      return { name:'YouTube', headers, rows };
+    }
+
+    function buildCompactExportSheets(){
+      const itemsByType = workspace.items.reduce((acc, item) => {
+        (acc[item.type] ||= []).push(item);
+        return acc;
+      }, {});
+      const sheets = [];
+      if(itemsByType.googleSearch?.length) sheets.push(buildSearchSheet(itemsByType.googleSearch));
+      if(itemsByType.googleDisplay?.length) sheets.push(buildGoogleDisplaySheet(itemsByType.googleDisplay));
+      if(itemsByType.meta?.length) sheets.push(buildMetaSheet(itemsByType.meta));
+      if(itemsByType.linkedin?.length) sheets.push(buildLinkedinSheet(itemsByType.linkedin));
+      if(itemsByType.youtube?.length) sheets.push(buildYoutubeSheet(itemsByType.youtube));
+      return sheets.filter(sheet => sheet.rows.length);
+    }
+
+    function csvEscape(value){
+      const stringValue = value == null ? '' : String(value);
+      return /[",\n;]/.test(stringValue) ? '"' + stringValue.replaceAll('"', '""') + '"' : stringValue;
+    }
+
+    function buildCsv(headers, rows){
+      return [headers.map(csvEscape).join(';')].concat(rows.map(row => headers.map(header => csvEscape(row[header])).join(';'))).join('\n');
+    }
+
+    function safeFilename(value){
+      return String(value || 'fail').toLowerCase().replace(/[^a-z0-9À-ɏ]+/gi, '-').replace(/^-+|-+$/g, '') || 'fail';
+    }
+
+    function showExportResult(blob, filename, label){
+      const box = document.getElementById('exportResult');
+      if(!box) return null;
+      if(box.dataset.url){
+        try{ URL.revokeObjectURL(box.dataset.url); }catch(error){}
+      }
+      const url = URL.createObjectURL(blob);
+      box.dataset.url = url;
+      box.classList.add('active');
+      box.innerHTML = `<a href="${url}" download="${filename}">${label || 'Laadi fail käsitsi alla'}</a><small>Kui fail ei hakanud automaatselt alla laadima, vajuta ülalolevale lingile. Link luuakse iga ekspordi jaoks uuesti.</small>`;
+      return url;
+    }
+
+    function downloadBlob(blob, filename, label){
+      const url = showExportResult(blob, filename, label);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      try{
+        if(typeof link.click === 'function'){
+          link.click();
+        } else {
+          link.dispatchEvent(new MouseEvent('click', { bubbles:true, cancelable:true, view:window }));
+        }
+      } finally {
+        setTimeout(() => {
+          if(link.parentNode) link.parentNode.removeChild(link);
+        }, 500);
+      }
+    }
+
+    function exportWorkspaceCsv(){
+      if(!workspace.items.length){
+        alert('Salvesta enne vähemalt üks reklaam tööfaili.');
+        return;
+      }
+      const sheets = buildCompactExportSheets();
+      if(!sheets.length){
+        alert('Ekspordiks sobivaid reklaame ei leitud.');
+        return;
+      }
+      if(sheets.length === 1){
+        const sheet = sheets[0];
+        const csv = buildCsv(sheet.headers, sheet.rows);
+        downloadBlob(new Blob([csv], {type:'text/csv;charset=utf-8'}), `reklaami-toofail-${safeFilename(sheet.name)}.csv`, 'Laadi CSV käsitsi alla');
+        return;
+      }
+      const fileMap = {};
+      sheets.forEach(sheet => {
+        fileMap[`${safeFilename(sheet.name)}.csv`] = buildCsv(sheet.headers, sheet.rows);
+      });
+      downloadBlob(zipBlob(fileMap, 'application/zip'), 'reklaami-toofail-csv.zip', 'Laadi CSV ZIP käsitsi alla');
+    }
+
+    function xmlEscape(value){
+      return String(value == null ? '' : value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
+    }
+
+    function columnName(index){
+      let dividend = index;
+      let name = '';
+      while(dividend > 0){
+        const modulo = (dividend - 1) % 26;
+        name = String.fromCharCode(65 + modulo) + name;
+        dividend = Math.floor((dividend - modulo) / 26);
+      }
+      return name;
+    }
+
+    function makeSheetXml(headers, rows){
+      const headerList = headers?.length ? headers : ['Info'];
+      const allRows = [headerList].concat(rows.length ? rows.map(row => headerList.map(header => row[header])) : [['Andmed puuduvad']]);
+      const rowXml = allRows.map((row, rowIndex) => {
+        const cells = row.map((value, cellIndex) => {
+          const ref = `${columnName(cellIndex + 1)}${rowIndex + 1}`;
+          return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEscape(value == null ? '' : value)}</t></is></c>`;
+        }).join('');
+        return `<row r="${rowIndex + 1}">${cells}</row>`;
+      }).join('');
+      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${rowXml}</sheetData></worksheet>`;
+    }
+
+    function workbookXml(sheetNames){
+      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${sheetNames.map((name, i) => `<sheet name="${xmlEscape(name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')}</sheets></workbook>`;
+    }
+
+    function workbookRelsXml(sheetNames){
+      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheetNames.map((name, i) => `<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')}<Relationship Id="rId${sheetNames.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+    }
+
+    function rootRelsXml(){
+      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
+    }
+
+    function contentTypesXml(sheetCount){
+      let overrides = '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/_rels/.rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
+      for(let i = 1; i <= sheetCount; i += 1){
+        overrides += `<Override PartName="/xl/worksheets/sheet${i}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`;
+      }
+      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${overrides}</Types>`;
+    }
+
+    function stylesXml(){
+      return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="1"><fill><patternFill patternType="none"/></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>`;
+    }
+
+    const CRC_TABLE = (() => {
+      const table = new Uint32Array(256);
+      for(let n = 0; n < 256; n += 1){
+        let c = n;
+        for(let k = 0; k < 8; k += 1){
+          c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+        }
+        table[n] = c >>> 0;
+      }
+      return table;
+    })();
+
+    function crc32(bytes){
+      let crc = 0 ^ (-1);
+      for(let i = 0; i < bytes.length; i += 1){
+        crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ bytes[i]) & 0xFF];
+      }
+      return (crc ^ (-1)) >>> 0;
+    }
+
+    function dosDateTime(date){
+      const year = Math.max(1980, date.getFullYear());
+      const dosTime = ((date.getHours() & 31) << 11) | ((date.getMinutes() & 63) << 5) | Math.floor((date.getSeconds() || 0) / 2);
+      const dosDate = (((year - 1980) & 127) << 9) | (((date.getMonth() + 1) & 15) << 5) | (date.getDate() & 31);
+      return { dosTime, dosDate };
+    }
+
+    function zipBlob(fileMap, mimeType = 'application/zip'){
+      const encoder = new TextEncoder();
+      const files = Object.entries(fileMap).map(([name, value]) => ({
+        name,
+        bytes: value instanceof Uint8Array ? value : encoder.encode(value)
+      }));
+      const now = dosDateTime(new Date());
+      const locals = [];
+      const centrals = [];
+      let offset = 0;
+      files.forEach(file => {
+        const nameBytes = encoder.encode(file.name);
+        const crc = crc32(file.bytes);
+        const local = new Uint8Array(30 + nameBytes.length);
+        const localView = new DataView(local.buffer);
+        localView.setUint32(0, 0x04034b50, true);
+        localView.setUint16(4, 20, true);
+        localView.setUint16(6, 0, true);
+        localView.setUint16(8, 0, true);
+        localView.setUint16(10, now.dosTime, true);
+        localView.setUint16(12, now.dosDate, true);
+        localView.setUint32(14, crc, true);
+        localView.setUint32(18, file.bytes.length, true);
+        localView.setUint32(22, file.bytes.length, true);
+        localView.setUint16(26, nameBytes.length, true);
+        localView.setUint16(28, 0, true);
+        local.set(nameBytes, 30);
+        locals.push(local, file.bytes);
+
+        const central = new Uint8Array(46 + nameBytes.length);
+        const centralView = new DataView(central.buffer);
+        centralView.setUint32(0, 0x02014b50, true);
+        centralView.setUint16(4, 20, true);
+        centralView.setUint16(6, 20, true);
+        centralView.setUint16(8, 0, true);
+        centralView.setUint16(10, 0, true);
+        centralView.setUint16(12, now.dosTime, true);
+        centralView.setUint16(14, now.dosDate, true);
+        centralView.setUint32(16, crc, true);
+        centralView.setUint32(20, file.bytes.length, true);
+        centralView.setUint32(24, file.bytes.length, true);
+        centralView.setUint16(28, nameBytes.length, true);
+        centralView.setUint16(30, 0, true);
+        centralView.setUint16(32, 0, true);
+        centralView.setUint16(34, 0, true);
+        centralView.setUint16(36, 0, true);
+        centralView.setUint32(38, 0, true);
+        centralView.setUint32(42, offset, true);
+        central.set(nameBytes, 46);
+        centrals.push(central);
+        offset += local.length + file.bytes.length;
+      });
+      const centralSize = centrals.reduce((sum, part) => sum + part.length, 0);
+      const end = new Uint8Array(22);
+      const endView = new DataView(end.buffer);
+      endView.setUint32(0, 0x06054b50, true);
+      endView.setUint16(4, 0, true);
+      endView.setUint16(6, 0, true);
+      endView.setUint16(8, files.length, true);
+      endView.setUint16(10, files.length, true);
+      endView.setUint32(12, centralSize, true);
+      endView.setUint32(16, offset, true);
+      endView.setUint16(20, 0, true);
+      return new Blob([...locals, ...centrals, end], {type:mimeType});
+    }
+
+    function buildWorkspaceXlsx(){
+      const sheets = buildCompactExportSheets();
+      const fileMap = {
+        '[Content_Types].xml': contentTypesXml(sheets.length),
+        '_rels/.rels': rootRelsXml(),
+        'xl/workbook.xml': workbookXml(sheets.map(sheet => sheet.name)),
+        'xl/_rels/workbook.xml.rels': workbookRelsXml(sheets.map(sheet => sheet.name)),
+        'xl/styles.xml': stylesXml()
+      };
+      sheets.forEach((sheet, index) => {
+        fileMap[`xl/worksheets/sheet${index + 1}.xml`] = makeSheetXml(sheet.headers, sheet.rows);
+      });
+      return zipBlob(fileMap, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    }
+
+    function exportWorkspaceXlsx(){
+      if(!workspace.items.length){
+        alert('Salvesta enne vähemalt üks reklaam tööfaili.');
+        return;
+      }
+      const sheets = buildCompactExportSheets();
+      if(!sheets.length){
+        alert('Ekspordiks sobivaid reklaame ei leitud.');
+        return;
+      }
+      downloadBlob(buildWorkspaceXlsx(), 'reklaami-toofail-kompaktne.xlsx', 'Laadi XLSX käsitsi alla');
+    }
+
+    function youtubeIdFromUrl(value){
+
+      const input = String(value || '').trim();
+      if(!input) return '';
+      const patterns = [
+        /[?&]v=([^&#]+)/,
+        /youtu\.be\/([^?&#/]+)/,
+        /youtube\.com\/shorts\/([^?&#/]+)/,
+        /youtube\.com\/embed\/([^?&#/]+)/
+      ];
+      for(const pattern of patterns){
+        const match = input.match(pattern);
+        if(match && match[1]) return match[1];
+      }
+      return '';
+    }
+
+    function youtubeThumbFromUrl(value){
+      const id = youtubeIdFromUrl(value);
+      return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
+    }
+
+    // Toolbar actions
+    document.getElementById('btnExample').onclick = ()=>{
+      state = clone(exampleState);
+      workspace.activeId = null;
+      workspace.draftName = defaultDraftName(state.activeTab);
+      workspace.draftGroup = '';
+      persistWorkspace();
+      render();
+    };
+    document.getElementById('btnShuffle').onclick = ()=>{ state.seed += 1; render(); };
+    document.getElementById('btnReset').onclick = ()=>{
+      state = clone(exampleState);
+      workspace.activeId = null;
+      workspace.draftName = defaultDraftName(state.activeTab);
+      workspace.draftGroup = '';
+      persistWorkspace();
+      render();
+    };
+    document.getElementById('btnSaveDraft').onclick = ()=>saveCurrentDraft(false);
+    document.getElementById('btnSaveCopy').onclick = ()=>saveCurrentDraft(true);
+    document.getElementById('btnNewDraft').onclick = ()=>newDraft();
+    document.getElementById('btnClearDraft').onclick = ()=>clearCurrentForm();
+    document.getElementById('btnClearForm').onclick = ()=>clearCurrentForm();
+    document.getElementById('btnExportCsv').onclick = ()=>{ try { exportWorkspaceCsv(); } catch(error){ console.error(error); alert('CSV faili loomisel tekkis viga: ' + (error?.message || error)); } };
+    document.getElementById('btnExportXlsx').onclick = ()=>{ try { exportWorkspaceXlsx(); } catch(error){ console.error(error); alert('XLSX faili loomisel tekkis viga: ' + (error?.message || error)); } };
+
+    // Generic setters
+    function setGoogleSearchView(v){ state.googleSearchView=v; render(); }
+    function setGoogleDisplayView(v){ state.googleDisplayView=v; render(); }
+
+    function setGoogleSearchUrl(v){ state.googleSearch.finalUrl=v; render(); }
+    function setGooglePath1(v){ state.googleSearch.paths[0]=v; render(); }
+    function setGooglePath2(v){ state.googleSearch.paths[1]=v; render(); }
+    function addGoogleHeadline(){ if(state.googleSearch.headlines.length<15) state.googleSearch.headlines.push({text:'', pin:''}); render(); }
+    function removeGoogleHeadline(i){ if(state.googleSearch.headlines.length>1) state.googleSearch.headlines.splice(i,1); render(); }
+    function setGoogleHeadline(i,v){ state.googleSearch.headlines[i].text=v; render(); }
+    function setGoogleHeadlinePin(i,v){ state.googleSearch.headlines[i].pin=v; render(); }
+    function addGoogleDescription(){ if(state.googleSearch.descriptions.length<4) state.googleSearch.descriptions.push({text:'', pin:''}); render(); }
+    function removeGoogleDescription(i){ if(state.googleSearch.descriptions.length>1) state.googleSearch.descriptions.splice(i,1); render(); }
+    function setGoogleDescription(i,v){ state.googleSearch.descriptions[i].text=v; render(); }
+    function setGoogleDescriptionPin(i,v){ state.googleSearch.descriptions[i].pin=v; render(); }
+    function setGoogleCallout(i,v){ state.googleSearch.callouts[i]=v; render(); }
+    function addGoogleCallout(){ state.googleSearch.callouts.push(''); render(); }
+    function removeGoogleCallout(i){ if(state.googleSearch.callouts.length>1) state.googleSearch.callouts.splice(i,1); render(); }
+    function setGoogleSitelink(i,v){ state.googleSearch.sitelinks[i]=v; render(); }
+    function addGoogleSitelink(){ state.googleSearch.sitelinks.push(''); render(); }
+    function removeGoogleSitelink(i){ if(state.googleSearch.sitelinks.length>1) state.googleSearch.sitelinks.splice(i,1); render(); }
+
+    function setDisplayUrl(v){ state.googleDisplay.finalUrl=v; render(); }
+    function setDisplayBusinessName(v){ state.googleDisplay.businessName=v; render(); }
+    function setDisplayLongHeadline(v){ state.googleDisplay.longHeadline=v; render(); }
+    function setDisplayCta(v){ state.googleDisplay.cta=v; render(); }
+    function addDisplayHeadline(){ if(state.googleDisplay.shortHeadlines.length<5) state.googleDisplay.shortHeadlines.push(''); render(); }
+    function removeDisplayHeadline(i){ if(state.googleDisplay.shortHeadlines.length>1) state.googleDisplay.shortHeadlines.splice(i,1); render(); }
+    function setDisplayHeadline(i,v){ state.googleDisplay.shortHeadlines[i]=v; render(); }
+    function addDisplayDescription(){ if(state.googleDisplay.descriptions.length<5) state.googleDisplay.descriptions.push(''); render(); }
+    function removeDisplayDescription(i){ if(state.googleDisplay.descriptions.length>1) state.googleDisplay.descriptions.splice(i,1); render(); }
+    function setDisplayDescription(i,v){ state.googleDisplay.descriptions[i]=v; render(); }
+
+    function setMetaPlacement(v){ state.meta.placement=v; render(); }
+    function setMetaBrand(v){ state.meta.brand=v; render(); }
+    function setMetaPageName(v){ state.meta.pageName=v; render(); }
+    function setMetaUrl(v){ state.meta.finalUrl=v; render(); }
+    function setMetaPrimaryText(v){ state.meta.primaryText=v; render(); }
+    function setMetaHeadline(v){ state.meta.headline=v; render(); }
+    function setMetaDescription(v){ state.meta.description=v; render(); }
+    function setMetaCta(v){ state.meta.cta=v; render(); }
+
+    function addMetaCard(){ state.meta.carouselCards.push({headline:'',description:'',url:'',image:PLACEHOLDER_SQUARE}); render(); }
+    function removeMetaCard(i){ if(state.meta.carouselCards.length>2) state.meta.carouselCards.splice(i,1); render(); }
+    function setMetaCardHeadline(i,v){ state.meta.carouselCards[i].headline=v; render(); }
+    function setMetaCardDescription(i,v){ state.meta.carouselCards[i].description=v; render(); }
+    function setMetaCardUrl(i,v){ state.meta.carouselCards[i].url=v; render(); }
+    function setMetaCardImage(i,v){ state.meta.carouselCards[i].image=v; render(); }
+
+    function setLinkedinFormat(v){ state.linkedin.format=v; render(); }
+    function setLinkedinCompany(v){ state.linkedin.company=v; render(); }
+    function setLinkedinUrl(v){ state.linkedin.finalUrl=v; render(); }
+    function setLinkedinIntroText(v){ state.linkedin.introText=v; render(); }
+    function setLinkedinHeadline(v){ state.linkedin.headline=v; render(); }
+    function setLinkedinDescription(v){ state.linkedin.description=v; render(); }
+    function setLinkedinCta(v){ state.linkedin.cta=v; render(); }
+
+    function addLinkedinCard(){ state.linkedin.carouselCards.push({headline:'',description:'',url:'',image:PLACEHOLDER_SQUARE}); render(); }
+    function removeLinkedinCard(i){ if(state.linkedin.carouselCards.length>2) state.linkedin.carouselCards.splice(i,1); render(); }
+    function setLinkedinCardHeadline(i,v){ state.linkedin.carouselCards[i].headline=v; render(); }
+    function setLinkedinCardDescription(i,v){ state.linkedin.carouselCards[i].description=v; render(); }
+    function setLinkedinCardUrl(i,v){ state.linkedin.carouselCards[i].url=v; render(); }
+    function setLinkedinCardImage(i,v){ state.linkedin.carouselCards[i].image=v; render(); }
+
+    function setYoutubePlacement(v){ state.youtube.placement=v; render(); }
+    function setYoutubeChannel(v){ state.youtube.channel=v; render(); }
+    function setYoutubeVideoUrl(v){ state.youtube.videoUrl=v; const thumb = youtubeThumbFromUrl(v); if(thumb) state.youtube.thumbnail = thumb; render(); }
+    function setYoutubeTitle(v){ state.youtube.title=v; render(); }
+    function setYoutubeDesc1(v){ state.youtube.desc1=v; render(); }
+    function setYoutubeDesc2(v){ state.youtube.desc2=v; render(); }
+    function setYoutubeCta(v){ state.youtube.cta=v; render(); }
+
+    function useFile(file, callback){
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=>callback(reader.result);
+      reader.readAsDataURL(file);
+    }
+
+    function setDisplayLandscapeImage(v){ state.googleDisplay.landscapeImage=v; render(); }
+    function setDisplayLandscapeImageFile(file){ useFile(file, result=>{ state.googleDisplay.landscapeImage=result; render(); }); }
+    function setDisplaySquareImage(v){ state.googleDisplay.squareImage=v; render(); }
+    function setDisplaySquareImageFile(file){ useFile(file, result=>{ state.googleDisplay.squareImage=result; render(); }); }
+    function setDisplayPortraitImage(v){ state.googleDisplay.portraitImage=v; render(); }
+    function setDisplayPortraitImageFile(file){ useFile(file, result=>{ state.googleDisplay.portraitImage=result; render(); }); }
+    function setDisplayLogoImage(v){ state.googleDisplay.logoImage=v; render(); }
+    function setDisplayLogoImageFile(file){ useFile(file, result=>{ state.googleDisplay.logoImage=result; render(); }); }
+    function setMetaImage(v){ state.meta.image=v; render(); }
+    function setMetaImageFile(file){ useFile(file, result=>{ state.meta.image=result; render(); }); }
+    function setMetaPortraitImage(v){ state.meta.portraitImage=v; render(); }
+    function setMetaPortraitImageFile(file){ useFile(file, result=>{ state.meta.portraitImage=result; render(); }); }
+    function setMetaCardImageFile(i, file){ useFile(file, result=>{ state.meta.carouselCards[i].image=result; render(); }); }
+    function setLinkedinImage(v){ state.linkedin.image=v; render(); }
+    function setLinkedinImageFile(file){ useFile(file, result=>{ state.linkedin.image=result; render(); }); }
+    function setLinkedinLogo(v){ state.linkedin.logo=v; render(); }
+    function setLinkedinLogoFile(file){ useFile(file, result=>{ state.linkedin.logo=result; render(); }); }
+    function setLinkedinCardImageFile(i, file){ useFile(file, result=>{ state.linkedin.carouselCards[i].image=result; render(); }); }
+    function setYoutubeThumbnail(v){ state.youtube.thumbnail=v; render(); }
+    function setYoutubeThumbnailFile(file){ useFile(file, result=>{ state.youtube.thumbnail=result; render(); }); }
+
+    cleanUrl();
+    loadCurrentState();
+    loadWorkspace();
+    if(!workspace.draftName) workspace.draftName = defaultDraftName(state.activeTab);
+    render();
+  </script>
+</body>
+</html>
